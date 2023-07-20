@@ -1,0 +1,11 @@
+
+player : "v","^","<",">"
+atr:. hp
+    . inventário
+func:. andar
+     . atacar
+     . usar
+       .. usar sem item
+       .. usar com item
+     . morrer (hp == 0)
+     . completar o mapa

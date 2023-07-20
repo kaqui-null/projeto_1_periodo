@@ -1,8 +1,10 @@
-# imports vem aqui
+import curses
+from player import Player
 
 
 def main():
-    pass
+    player = player.Player()
+
 
 
 # inicialização na função main em main.py
