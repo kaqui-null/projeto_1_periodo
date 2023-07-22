@@ -1,7 +1,6 @@
 import curses
 from curses import wrapper
 
-
 from player import Player
 
 # coloquem o tamanho do mapa aqui ou mudem a variável na inicialização tbm
@@ -22,22 +21,24 @@ def main(stdsrc):
         pass
 
     
-    player = Player(WINDOW_SIZE, MAP_ORIGIN)
+    player = Player(stdsrc, WINDOW_SIZE, MAP_ORIGIN)
 
     game_running = True
     while game_running:
         try:
-            key = stdsrc.getch()
+            key = stdsrc.getkey()
         except:
             key = None
 
-        if key == 27:
+        if key == "q":
             break
-        else:
-            continue
 
+        stdsrc.erase()
+        player.walk(key)
+        player.draw_sprite()
+        stdsrc.refresh()
+     
 
-# inicialização na função main em main.py
 if __name__ == "__main__":
    wrapper(main) 
 

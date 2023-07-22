@@ -3,7 +3,8 @@ import curses
 
 class Player:
     
-    def __init__(self, window_size, origin):
+    def __init__(self, stdsrc, window_size, origin):
+        self.stdsrc = stdsrc
         self.window_size = window_size
         self.window_y = window_size[0]
         self.window_x = window_size[1]
@@ -13,10 +14,31 @@ class Player:
         self.direction = origin[2]
 
     def draw_sprite(self):
-        pass
+        sprites = ["<", ">", "^", "v"]
 
-    def walk(self):
-        pass
+        switcher = {
+            "up":"^",
+            "down":"v",
+            "left": "<",
+            "right": ">"
+                }
+        curr_sprite = switcher.get(self.direction, "invalid direction error")
+        self.stdsrc.addstr(self.origin_y, self.origin_x, curr_sprite)
+
+
+    def walk(self, key):
+        if key == "KEY_LEFT":
+            self.origin_x -= 1 # muda dps quando decidirmos em uma distância percorrida 
+            self.direction = "left"
+        elif key == "KEY_RIGHT":
+            self.origin_x += 1
+            self.direction = "right"
+        elif key == "KEY_UP":
+            self.origin_y -= 1
+            self.direction = "up"
+        elif key == "KEY_DOWN":
+            self.origin_y += 1
+            self.direction = "down"
 
 
 
