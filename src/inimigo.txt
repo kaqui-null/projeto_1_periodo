@@ -1,0 +1,23 @@
+
+inimigo: "@"
+
+atributo:
+    hp 
+    força 
+    {velocidade}
+    {direção}
+
+funções:
+    {andar -> randomic
+        se for atacado ou se chocar com player
+        -> attack}
+    attack
+        check area arredor
+            -> atacar o que tiver na area
+        se a area estiver vazia
+            -> voltar a andar -> procurar
+    morrer
+
+    procurar (futura)
+
+

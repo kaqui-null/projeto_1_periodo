@@ -1,0 +1,5 @@
+boss:    "O"
+     "D / | \ -|====>" 
+       " | | " dps pensa melhor no design
+
+
