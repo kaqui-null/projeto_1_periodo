@@ -3,7 +3,7 @@ import curses
 
 class Player:
     
-    def __init__(self, stdsrc, window_size, origin):
+    def __init__(self, stdsrc, window_size, origin, max_hp):
         self.stdsrc = stdsrc
         self.window_size = window_size
         self.window_y = window_size[0]
@@ -12,6 +12,10 @@ class Player:
         self.origin_y = origin[0]
         self.origin_x = origin[1]
         self.direction = origin[2]
+
+        self.max_hp = max_hp
+        self.inventario = []
+        self.inventario_max_size = 5
 
     def draw_sprite(self):
         sprites = ["<", ">", "^", "v"]
@@ -39,6 +43,12 @@ class Player:
         elif key == "KEY_DOWN":
             self.origin_y += 1
             self.direction = "down"
+
+    def attack(self):
+        pass
+
+    def use(self):
+        pass
 
 
 

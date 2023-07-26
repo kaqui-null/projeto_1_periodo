@@ -21,7 +21,7 @@ def main(stdsrc):
         pass
 
     
-    player = Player(stdsrc, WINDOW_SIZE, MAP_ORIGIN)
+    player = Player(stdsrc, WINDOW_SIZE, MAP_ORIGIN, 3)
 
     game_running = True
     while game_running:
