@@ -54,8 +54,10 @@ def main(stdsrc):
 
         stdsrc.refresh()
     
+    # debug --
     print(str(player.hp) + "/" + str(player.max_hp))
     time.sleep(2)
+    # --
      
 
 
