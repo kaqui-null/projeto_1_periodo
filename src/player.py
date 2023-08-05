@@ -32,7 +32,7 @@ class Player:
 
     def walk(self, key):
         if key == "KEY_LEFT":
-            self.origin_x -= 1 # muda dps quando decidirmos em uma distância percorrida 
+            self.origin_x -= 1
             self.direction = "left"
         elif key == "KEY_RIGHT":
             self.origin_x += 1

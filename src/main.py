@@ -1,6 +1,5 @@
 import curses
 from curses import wrapper
-import time
 
 from player import Player
 from enemy import Enemy
@@ -52,10 +51,6 @@ def main(stdsrc):
         
         stdsrc.refresh()
     
-    # debug --
-    print(str(player.hp) + "/" + str(player.max_hp))
-    time.sleep(2)
-    # --
      
 
 
