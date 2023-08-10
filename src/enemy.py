@@ -3,20 +3,20 @@ import curses
 
 class Enemy:
 
-    def __init__(self,stdsrc, hp, forca, origin_y, origin_x, direction, player_pos):
+    def __init__(self,win, hp, forca, origin, player_pos):
         self.hp = hp
-        self.stdsrc = stdsrc
+        self.win = win
         self.forca = forca
         self.sprite = "@"
-        self.origin_y = origin_y
-        self.origin_x = origin_x
-        self.direction = direction
+        self.origin_y = origin[0]
+        self.origin_x = origin[1]
+        self.direction = origin[2]
         self.player_pos = player_pos
         self.player_y = player_pos[0]
         self.player_x = player_pos[1]
 
     def draw_sprite(self):
-        self.stdsrc.addstr(self.origin_y, self.origin_x, self.sprite)
+        self.win.addstr(self.origin_y, self.origin_x, self.sprite)
 
     def attack(self):
         if self.check_surrounding() == True:
