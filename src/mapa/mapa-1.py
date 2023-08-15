@@ -24,10 +24,6 @@ def mapa_1(stdscr):
         criando_sala(stdscr, 21, 70, 8, 15),
     ]
 
-    corredor = [
-        criando_corredor(stdscr, 20,20)
-    ]
-
     stdscr.getch()
 
 wrapper(mapa_1)
