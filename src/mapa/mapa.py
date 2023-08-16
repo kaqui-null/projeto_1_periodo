@@ -3,7 +3,7 @@ AINDA VOU ORGANIZAR MELHOR O CODIGO DOS CORREDORES.
 AINDA ESTA FALTANDO COLOCAR OS CORREDORES.
 
 salas -> "."
-corredores -> "#"
+corredores -> "."
 
 '''
 
@@ -71,12 +71,12 @@ def imprimindo_salas(stdscr):
 #funcao para desenhar corredor vertical
 def desenhando_corredor_vertical(stdscr, y, x, vertical):
     for i in range(y, y+vertical):
-        stdscr.addstr(i,x, "|")
+        stdscr.addstr(i,x, ".")
 
 #funcao para desenhar corredor horizontal
 def desenhando_corredor_horizontal(stdscr, y, x, horizontal):
     for i in range(x, x+horizontal):
-        stdscr.addstr(y,i, "_")
+        stdscr.addstr(y,i, ".")
 
 #funcao para imprimir os corredores na tela
 def imprimindo_corredores(stdscr):
