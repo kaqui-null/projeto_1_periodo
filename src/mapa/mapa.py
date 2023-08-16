@@ -57,42 +57,48 @@ def imprimindo_salas(stdscr):
         #imprimindo as salas
         desenhando_salas(stdscr, altura, comprimento, y, x)
         
+        curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_WHITE)
+        WHITE_AND_WHITE = curses.color_pair(1)
+
         #criando as subjanelas e adicionando as bordas
+        stdscr.attron(WHITE_AND_WHITE)
         window = stdscr.subwin(altura, comprimento, y, x)
         window.border()
+        stdscr.attroff(WHITE_AND_WHITE)
 
 ############################### CORREDORES #########################################
 
 #funcao para desenhar corredor vertical
 def desenhando_corredor_vertical(stdscr, y, x, vertical):
     for i in range(y, y+vertical):
-        stdscr.addstr(i,x, "#")
+        stdscr.addstr(i,x, "|")
 
 #funcao para desenhar corredor horizontal
 def desenhando_corredor_horizontal(stdscr, y, x, horizontal):
     for i in range(x, x+horizontal):
-        stdscr.addstr(y,i, "#")
+        stdscr.addstr(y,i, "_")
 
 #funcao para imprimir os corredores na tela
 def imprimindo_corredores(stdscr):
+
     #corredor vertical
     dimensoes_vertical = [
-        (10),
-        (3),
-    ]
-
-    dimensoes_horizontal = [
-
+        (8),
+        (3)
     ]
 
     #coordenadas corredor, sempre (y,x)
     coordenadas_vertical = [
         [11,7],
-        [29,17],
+        [18,17]
+    ]
+
+    dimensoes_horizontal = [
+        (10)
     ]
 
     coordenadas_horizontal = [
-
+        [18,8]
     ]
     
     #loop para imprimir os corredores verticais
@@ -103,9 +109,10 @@ def imprimindo_corredores(stdscr):
         y_vertical = coordenadas_vertical[j][0]
         x_vertical = coordenadas_vertical[j][1]
 
-
+        
         #imprimindo corredor vertical
         desenhando_corredor_vertical(stdscr, y_vertical, x_vertical, vertical)
+        
 
 
     #loop para imprimir os corredores horizontais
@@ -119,14 +126,38 @@ def imprimindo_corredores(stdscr):
         #imprimindo corredor horizontal
         desenhando_corredor_horizontal(stdscr, y_horizontal, x_horizontal, horizontal)
 
+def portas(stdscr):
+    curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_BLACK)
+    BLACK = curses.color_pair(2)
+
+    #coordenadas das portas (y,x)
+    porta = [
+        [11,7]
+    ]
+    for i in range(len(porta)):
+        y = porta[i][0]
+        x = porta[i][1]
+        stdscr.attron(BLACK)
+        stdscr.addch(y,x, curses.ACS_BLOCK)
+        stdscr.attroff(BLACK)
+
 #funcao principal do mapa
 def mapa(stdscr):
     curses.curs_set(0)
     stdscr.clear()
 
-    imprimindo_salas(stdscr)
-    imprimindo_corredores(stdscr)
+    curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_WHITE)
+    WHITE_AND_WHITE = curses.color_pair(1)
 
+    imprimindo_salas(stdscr)
+    
+    stdscr.attron(curses.A_BOLD)
+    stdscr.attron(WHITE_AND_WHITE)
+    imprimindo_corredores(stdscr)
+    stdscr.attroff(WHITE_AND_WHITE)
+    stdscr.attroff(curses.A_BOLD)
+
+    #portas(stdscr)
 
     stdscr.refresh()
     stdscr.getch()
