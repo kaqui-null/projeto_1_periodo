@@ -10,27 +10,16 @@ corredores -> "#"
 import curses
 from curses import wrapper
 
+############################### SALAS ##########################################
+
+#funcao para desenhar as salas
 def desenhando_salas(stdscr, altura, comprimento, y, x):
     for i in range(y, y + altura):
         stdscr.addstr(i, x, '.' * comprimento)
 
-
-def desenhando_corredor_vertical(stdscr, y, x, vertical):
-    for i in range(y, y+vertical):
-        stdscr.addstr(i,x, "#")
-
-def desenhando_corredor_horizontal(stdscr, y, x, horizontal):
-    for i in range(x, x+horizontal):
-        stdscr.addstr(y,i, "#")
-
-
-def mapa(stdscr):
-    curses.curs_set(0)
-    stdscr.clear()
-
-    ############################### SALAS ##########################################
-
-    #coloca a quantidade de salas que o mapa tera
+#funcao para imprimir as salas na tela
+def imprimindo_salas(stdscr):
+     #coloca a quantidade de salas que o mapa tera
     numero_salas = 7
 
     # coloca as dimensoes da sala, sempre (altura, comprimento)
@@ -71,9 +60,21 @@ def mapa(stdscr):
         #criando as subjanelas e adicionando as bordas
         window = stdscr.subwin(altura, comprimento, y, x)
         window.border()
-    
-    ############################### CORREDORES #########################################
 
+############################### CORREDORES #########################################
+
+#funcao para desenhar corredor vertical
+def desenhando_corredor_vertical(stdscr, y, x, vertical):
+    for i in range(y, y+vertical):
+        stdscr.addstr(i,x, "#")
+
+#funcao para desenhar corredor horizontal
+def desenhando_corredor_horizontal(stdscr, y, x, horizontal):
+    for i in range(x, x+horizontal):
+        stdscr.addstr(y,i, "#")
+
+#funcao para imprimir os corredores na tela
+def imprimindo_corredores(stdscr):
     #corredor vertical
     dimensoes_vertical = [
         (10),
@@ -87,7 +88,7 @@ def mapa(stdscr):
     #coordenadas corredor, sempre (y,x)
     coordenadas_vertical = [
         [11,7],
-        [29,18],
+        [29,17],
     ]
 
     coordenadas_horizontal = [
@@ -101,6 +102,7 @@ def mapa(stdscr):
         vertical = dimensoes_vertical[j]
         y_vertical = coordenadas_vertical[j][0]
         x_vertical = coordenadas_vertical[j][1]
+
 
         #imprimindo corredor vertical
         desenhando_corredor_vertical(stdscr, y_vertical, x_vertical, vertical)
@@ -117,8 +119,15 @@ def mapa(stdscr):
         #imprimindo corredor horizontal
         desenhando_corredor_horizontal(stdscr, y_horizontal, x_horizontal, horizontal)
 
+#funcao principal do mapa
+def mapa(stdscr):
+    curses.curs_set(0)
+    stdscr.clear()
+
+    imprimindo_salas(stdscr)
+    imprimindo_corredores(stdscr)
+
 
     stdscr.refresh()
     stdscr.getch()
-
 curses.wrapper(mapa)
