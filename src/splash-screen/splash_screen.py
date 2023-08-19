@@ -33,10 +33,10 @@ def splash_screen(stdscr):
     for i in range(len(texto)):
         for j in range(len(texto[i])):
             # posicao que o texto deve aparecer
-            splash_height = len(texto)
-            splash_width = len(texto[i])
-            y = (alturaDaTela - splash_height) // 2
-            x = (comprimentoDaTela - splash_width) // 2
+            alturaDaArray = len(texto)
+            comprimentoDaArray = len(texto[i])
+            y = (alturaDaTela - alturaDaArray) // 2
+            x = (comprimentoDaTela - comprimentoDaArray) // 2
 
             #coordenadas
             y = y+i
