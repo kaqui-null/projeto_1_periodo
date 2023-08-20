@@ -1,5 +1,6 @@
 import curses
 from curses import wrapper
+import time
 
 def splash_screen(stdscr):
     curses.curs_set(0)
@@ -45,23 +46,21 @@ def splash_screen(stdscr):
 
             #imprimir o nome rogue com atributos
             if texto[i][j]=="#":
-                
+
+                time.sleep(0.01)
                 stdscr.attron(GREEN)
                 stdscr.addstr(y+2,x-2, texto[i][j])
                 stdscr.attron(GREEN)
-
                 stdscr.attron(MAGENTA)
                 stdscr.addstr(y+1,x-1, texto[i][j])
                 stdscr.attron(MAGENTA)
-
                 stdscr.attron(WHITE)
                 stdscr.addstr(y,x,texto[i][j])
                 stdscr.attroff(WHITE)
             else: 
                 pass
+            stdscr.refresh()
 
-
-    stdscr.refresh()
     stdscr.getch()
 wrapper(splash_screen)
 
