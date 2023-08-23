@@ -33,6 +33,12 @@ class Enemy:
                     return True
                 else:
                     continue
+
+    def die(self):
+        if self.hp > 0:
+            return False
+        else:
+            return True
         
         
 

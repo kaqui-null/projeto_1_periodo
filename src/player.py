@@ -3,7 +3,7 @@ import curses
 
 class Player:
     
-    def __init__(self, win, window_size, origin, max_hp):
+    def __init__(self, win, window_size, origin, max_hp, dmg):
         self.win = win
         self.window_size = window_size
         self.window_y = window_size[0]
@@ -11,11 +11,11 @@ class Player:
         self.origin_y = origin[0] 
         self.origin_x = origin[1]
         self.direction = origin[2]
+        self.dmg = dmg
 
         self.max_hp = max_hp
         self.hp = max_hp
         self.inventario = []
-        self.inventario_max_size = 5
 
     def draw_sprite(self):
         switcher = {
@@ -43,14 +43,32 @@ class Player:
             self.direction = "down"
 
     def is_hurt(self, dmg):
-        self.hp -= 1
+        self.hp -= dmg
 
 
     def attack(self):
-        pass
+        switcher = {
+            "up":[self.origin_y - 1, self.origin_x],
+            "down":[self.origin_y + 1, self.origin_x],
+            "left": [self.origin_y, self.origin_x - 1],
+            "right": [self.origin_y, self.origin_x + 1]
+                }
+        return switcher.get(self.direction, "invalid direction")
 
     def use(self):
-        pass
+        switcher_ver = {
+            "up": int(self.origin_y - 1),
+            "down": int(self.origin_y + 1)
+                }
+        switcher_hor = {
+            "left": int(self.origin_x - 1),
+            "right": int(self.origin_x + 1)
+        }
+        coord_y = switcher_ver.get(self.direction, -1)
+        coord_x = switcher_hor.get(self.direction, -1)
+        if (self.win.inch(coord_y, int(self.origin_x)) or self.win.inch(int(self.origin_y) ,coord_x)) == curses.ACS_DIAMOND:
+            return True
+
 
 
 
