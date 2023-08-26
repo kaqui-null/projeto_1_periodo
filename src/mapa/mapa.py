@@ -162,6 +162,8 @@ def imprimindo_corredores(stdscr):
 def mapa(stdscr):
     curses.curs_set(0)
     stdscr.clear()
+
+    curses.resize_term(35,135)
     
     imprimindo_salas(stdscr)
      
