@@ -24,6 +24,7 @@ def main(stdsrc):
     while True:
         player.draw_sprite()
         
+        
         try:
             key = stdsrc.getkey()
         except:
@@ -33,7 +34,9 @@ def main(stdsrc):
             if key == "q":
                 break
         
+
             mapa_test_window.erase()
+            mapa_test_window.insch(5,5,curses.ACS_DIAMOND)
             player.walk(key)
             player.draw_sprite()
 
@@ -49,9 +52,8 @@ def main(stdsrc):
                     enemy.hp -= player.dmg
                 
             if key == "z":
-                if player.use() == True:
-                    #player.add_to_inv()
-                    debug_msg(stdsrc)
+                player.use()
+                stdsrc.addstr(0,0, str(player.inventario))
 
         if player.hp <= 0:
             #game_over()
@@ -60,9 +62,7 @@ def main(stdsrc):
         mapa_test_window.refresh()
         mapa_test_window.border()
         stdsrc.refresh()
- 
-def debug_msg(stdsrc):
-    stdsrc.addch(0,0,"#")
+
 
 if __name__ == "__main__":
    wrapper(main)

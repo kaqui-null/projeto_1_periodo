@@ -64,11 +64,16 @@ class Player:
             "left": int(self.origin_x - 1),
             "right": int(self.origin_x + 1)
         }
-        coord_y = switcher_ver.get(self.direction, -1)
-        coord_x = switcher_hor.get(self.direction, -1)
-        if (self.win.inch(coord_y, int(self.origin_x)) or self.win.inch(int(self.origin_y) ,coord_x)) == curses.ACS_DIAMOND:
-            return True
+        coord_y = switcher_ver.get(self.direction, - 1)
+        coord_x = switcher_hor.get(self.direction, - 1)
 
+        visualized_vertical = self.win.inch(coord_y, int(self.origin_x))
+        visualized_horizontal = self.win.inch(int(self.origin_y) ,coord_x)
+
+        if (visualized_horizontal == curses.ACS_DIAMOND) or (visualized_vertical == curses.ACS_DIAMOND):
+            self.inventario.append(self.win.inch(coord_y, int(self.origin_x)))
+        else:
+            return False
 
 
 
