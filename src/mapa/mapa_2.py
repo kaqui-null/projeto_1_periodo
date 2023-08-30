@@ -1,14 +1,4 @@
-'''
-AINDA VOU ORGANIZAR MELHOR O CODIGO DOS CORREDORES.
-AINDA ESTA FALTANDO COLOCAR OS CORREDORES.
-
-salas -> "."
-corredores -> "."
-
-'''
-
 import curses
-<<<<<<< HEAD
 from curses import wrapper
 from curses.textpad import rectangle
 
@@ -22,28 +12,25 @@ def desenhando_salas(stdscr, altura, comprimento, y, x):
 #funcao para imprimir as salas na tela
 def imprimindo_salas(stdscr):
      #coloca a quantidade de salas que o mapa tera
-    numero_salas = 7
+    numero_salas = 5
 
     # coloca as dimensoes da sala, sempre (altura, comprimento)
     dimensoes_salas = [
-        [8,16], 
-        [9,13],
-        [10,15], 
-        [6,30],
-        [15,15],
-        [8,23],
-        [8,24] 
+        [8,16], #
+        [10,15],# 
+        [6,30],#
+        [15,15],#
+        [8,24]
     ]
 
     #coloca as coordenadas da sala, sempre (y,x)
     coordenadas_salas = [
-        [3,5], 
-        [22,35],
-        [19,5], 
+        [4,10], 
+        [19,10], 
         [3,65],
         [13,110],
-        [9,30],
-        [18,68] 
+        [20,50]
+        
     ]
 
     #loop para imprimir as salas
@@ -83,54 +70,54 @@ def imprimindo_corredores(stdscr):
 
     #corredor vertical
     dimensoes_vertical = [
-        (6), #
+        (8), #
         (2), #
-        (3), #
         (9),
-        (2), #
+        (3), #
         (2), #
         (3),
         (2),
         (5), #
-        (2), #
+        (5), #
     ]
 
     #coordenadas corredor, sempre (y,x)
     coordenadas_vertical = [
-        [11,6],
+        [9,6],
         [17,18],
-        [29,6],
         [23,27],
-        [29,78],
+        [29,12],
         [28,124],
         [10,111],
         [8,105],
         [4,30],
-        [16,69]
+        [25,79]
     ]
 
     dimensoes_horizontal = [
-        (12),
-        (20),
-        (8), #
-        (30), #
+        (12),#
+        (15),
+        (23), #
+        (2),#
+        (5), 
         (45),
         (6),
-        (10), #
-        (35), #
-        (16), #
+        (10), 
+        (35), 
+        (6), 
     ]
 
     coordenadas_horizontal = [
         [16,7],
-        [31,7],
+        [31,13],
         [22,27],
-        [30,48],
+        [9,8],#
+        [8,26],
         [29,79],
         [10,105],
         [8,95],
         [3,30],
-        [16,53]
+        [24,74],
     ]
     
     #loop para imprimir os corredores verticais
@@ -175,19 +162,3 @@ def mapa(stdscr):
     stdscr.refresh()
     stdscr.getch()
 curses.wrapper(mapa)
-=======
-from curses import textpad
-
-class Mapa_test:
-    def __init__(self, stdsrc):
-        self.stdsrc = stdsrc
-        self.y = 20
-        self.x = 20
-        self.begin_y = int(round((stdsrc.getmaxyx()[0] - self.y)/2))
-        self.begin_x = int(round((stdsrc.getmaxyx()[1] - self.x)/2))
-    
-    def new_win(self):
-        window = curses.newwin(self.y, self.x,self.begin_y, self.begin_x)
-        window.border()
-        return window
->>>>>>> master
