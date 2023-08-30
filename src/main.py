@@ -3,7 +3,7 @@ from curses import wrapper
 
 from player import Player
 from enemy import Enemy
-from mapa import mapa
+from mapa import mapa_1
 
 
 def main(stdsrc):
@@ -14,7 +14,7 @@ def main(stdsrc):
     except:
         pass
 
-    mapa_test = mapa.Mapa_test(stdsrc)
+    mapa_test = mapa_1.Mapa_test(stdsrc)
     mapa_test_window = mapa_test.new_win()
     
     player = Player(mapa_test_window, [mapa_test.y, mapa_test.x], [5, 5, "up"], 3, 3)
@@ -22,6 +22,7 @@ def main(stdsrc):
 
     key = 0
     while True:
+        curses.resize_term(35,135)
         player.draw_sprite()
         
         

@@ -1,6 +1,5 @@
 import curses
 
-
 class Enemy:
 
     def __init__(self,win, hp, forca, origin, player_pos):
