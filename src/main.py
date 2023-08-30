@@ -4,6 +4,7 @@ from curses import wrapper
 from player import Player
 from enemy import Enemy
 from mapa import win
+import splash_screen
 
 
 def main(stdsrc):
@@ -16,11 +17,18 @@ def main(stdsrc):
 
     window = win.Win(stdsrc, 35, 135)
     window_src = window.new_win()
-    
+    curses.resize_term(35,135)
+
+    intro = splash_screen.Splash(window_src)
+
     player = Player(window_src, [window.y, window.x], [5, 5, "up"], 3, 3)
     enemy = Enemy(window_src, 3, 1,[8, 8, "up"], [player.origin_y, player.origin_x])
 
+    intro.splash_screen()
     key = 0
+    while True:
+        pass
+
     while True:
         curses.resize_term(35,135)
         player.draw_sprite()
