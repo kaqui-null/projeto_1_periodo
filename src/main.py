@@ -4,6 +4,7 @@ from curses import wrapper
 from player import Player
 from enemy import Enemy
 from mapa import mapa_1
+from mapa import win
 
 
 def main(stdsrc):
@@ -14,11 +15,11 @@ def main(stdsrc):
     except:
         pass
 
-    mapa_test = mapa_1.Mapa_test(stdsrc)
-    mapa_test_window = mapa_test.new_win()
+    window = win.Win(stdsrc, 35, 135)
+    window_src = window.new_win()
     
-    player = Player(mapa_test_window, [mapa_test.y, mapa_test.x], [5, 5, "up"], 3, 3)
-    enemy = Enemy(mapa_test_window, 3, 1,[8, 8, "up"], [player.origin_y, player.origin_x])
+    player = Player(window_src, [window.y, window.x], [5, 5, "up"], 3, 3)
+    enemy = Enemy(window_src, 3, 1,[8, 8, "up"], [player.origin_y, player.origin_x])
 
     key = 0
     while True:

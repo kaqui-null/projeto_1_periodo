@@ -36,7 +36,7 @@ class Mapa2:
             x = coordenadas_salas[i][1]
 
         
-            self.desenhando_salas(self.win, altura, comprimento, y, x) 
+            self.desenhando_salas(altura, comprimento, y, x) 
 
             
             window = self.win.subwin(altura+2, comprimento+2, y-1, x-1)
@@ -107,7 +107,7 @@ class Mapa2:
             y_vertical = coordenadas_vertical[j][0]
             x_vertical = coordenadas_vertical[j][1]
 
-            self.desenhando_corredor_vertical(self.win, y_vertical, x_vertical, vertical)
+            self.desenhando_corredor_vertical(y_vertical, x_vertical, vertical)
             
             
         for k in range(len(coordenadas_horizontal)):
@@ -116,8 +116,8 @@ class Mapa2:
             y_horizontal = coordenadas_horizontal[k][0]
             x_horizontal = coordenadas_horizontal[k][1]
 
-            self.desenhando_corredor_horizontal(self.win, y_horizontal, x_horizontal, horizontal)
+            self.desenhando_corredor_horizontal(y_horizontal, x_horizontal, horizontal)
 
     def draw(self):
-        self.imprimindo_salas(self.win)
-        self.imprimindo_corredores(self.win)
+        self.imprimindo_salas()
+        self.imprimindo_corredores()
