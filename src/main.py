@@ -3,7 +3,6 @@ from curses import wrapper
 
 from player import Player
 from enemy import Enemy
-from mapa import mapa_1
 from mapa import win
 
 
@@ -37,8 +36,8 @@ def main(stdsrc):
                 break
         
 
-            mapa_test_window.erase()
-            mapa_test_window.insch(5,5,curses.ACS_DIAMOND)
+            window_src.erase()
+            window_src.insch(5,5,curses.ACS_DIAMOND)
             player.walk(key)
             player.draw_sprite()
 
@@ -61,8 +60,8 @@ def main(stdsrc):
             #game_over()
             break
         
-        mapa_test_window.refresh()
-        mapa_test_window.border()
+        window_src.refresh()
+        window_src.border()
         stdsrc.refresh()
 
 
