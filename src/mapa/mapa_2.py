@@ -119,5 +119,6 @@ class Mapa2:
             self.desenhando_corredor_horizontal(y_horizontal, x_horizontal, horizontal)
 
     def draw(self):
+        curses.resize_term(35,135)
         self.imprimindo_salas()
         self.imprimindo_corredores()

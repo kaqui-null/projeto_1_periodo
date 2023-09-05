@@ -5,6 +5,7 @@ from player import Player
 from enemy import Enemy
 from mapa import win
 import splash_screen
+from menu_teste import menu
 
 
 def main(stdsrc):
@@ -26,8 +27,9 @@ def main(stdsrc):
 
     intro.splash_screen()
     key = 0
-    while True:
-        pass
+    curses.napms(2000)
+    main_menu = menu.Menu(window_src, stdsrc)
+    main_menu.menu()
 
     while True:
         curses.resize_term(35,135)
