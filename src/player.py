@@ -1,6 +1,6 @@
 import curses
 
-
+#### DEPRECATED ####
 class Player:
     
     def __init__(self, win, window_size, origin, max_hp, dmg):
