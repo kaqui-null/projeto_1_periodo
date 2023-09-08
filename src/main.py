@@ -69,7 +69,7 @@ def main(stdsrc):
                 stdsrc.addstr(0,0, str(PLAYER_INVENTORY))
 
         if PLAYER_HP[0] <= 0:
-            #game_over()
+            game_over(window)
             break
         
         print(ENEMY_HP, " ", PLAYER_HP)
@@ -383,8 +383,67 @@ def draw_corr_map2(win):
             win.addstr(y_horizontal,i, ".")
 ###############
 
+#### POPUP ####
+def game_over(win):
+    win.clear()
+    curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
+    RED_AND_BLACK = curses.color_pair(1)
+
+    gameOver = "GAME OVER!!"
+    y,x = win.getmaxyx()
+
+    y= y//2
+    x = x//2-len(gameOver)
+    i = 5
+    while i < 10:
+        win.refresh()
+
+        win.addstr(y,x, gameOver)
+
+        win.refresh()
+        curses.napms(1000)
+
+        win.attron(RED_AND_BLACK)
+        win.addstr(y,x, gameOver)
+        win.attroff(RED_AND_BLACK)
+
+        win.refresh()
+        curses.napms(1000)
+        i += 1
 
 
+def you_won(win):
+    win.clear()
+    curses.curs_set(0)
+    curses.resize_term(35,135)
+
+    curses.init_pair(1, curses.COLOR_GREEN, curses.COLOR_BLACK)
+    GREEN_AND_BLACK = curses.color_pair(1)
+
+    youWon = "YOU WON!!"
+    y,x = win.getmaxyx()
+
+    y= y//2
+    x = x//2-len(youWon)
+
+    i = 5
+    while i < 10:
+
+        win.refresh()
+
+        win.addstr(y,x, youWon)
+
+        win.refresh()
+        curses.napms(1000)
+
+        win.attron(GREEN_AND_BLACK)
+        win.addstr(y,x, youWon)
+        win.attroff(GREEN_AND_BLACK)
+
+        win.refresh()
+        curses.napms(1000)
+        i += 1
+###############
 
 
 
