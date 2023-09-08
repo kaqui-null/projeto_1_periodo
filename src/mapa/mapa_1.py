@@ -4,12 +4,12 @@ import curses
 class Mapa1:
     def __init__(self, win):
         self.win = win
-
+#
     def desenhando_salas(self, altura, comprimento, y, x):
         for i in range(y, y + altura):
             self.win.addstr(i, x, '.' * comprimento)
 
-
+#
     def imprimindo_salas(self):
         numero_salas = 7
 
@@ -46,17 +46,17 @@ class Mapa1:
             window = self.win.subwin(altura+2, comprimento+2, y-1, x-1)
             window.border()
             
-
+#
     def desenhando_corredor_vertical(self, y, x, vertical):
         for i in range(y, y + vertical):
             self.win.addstr(i,x, ".")
 
-
+#
     def desenhando_corredor_horizontal(self, y, x, horizontal):
         for i in range(x, x+horizontal):
             self.win.addstr(y,i, ".")
 
-
+#
     def imprimindo_corredores(self):
 
         dimensoes_vertical = [
@@ -128,6 +128,6 @@ class Mapa1:
             self.desenhando_corredor_horizontal( y_horizontal, x_horizontal, horizontal)
 
     def draw(self):
-        self.imprimindo_salas()
+        self.imprimindo_salas()#
         self.imprimindo_corredores()
         

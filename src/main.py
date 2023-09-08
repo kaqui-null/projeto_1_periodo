@@ -1,9 +1,6 @@
 import curses
 from curses import wrapper
 
-from enemy import Enemy
-from mapa import win
-
 
 def main(stdsrc):
     WIN_Y = 35
@@ -34,6 +31,7 @@ def main(stdsrc):
     key = 0
     while True:
         curses.resize_term(35,135)
+        draw_map1(window)
         player_draw_sprite(window, PLAYER_DIRECTION, PLAYER_Y, PLAYER_X)
         
         
@@ -147,7 +145,7 @@ def player_use(win, player_y, player_x, player_direction, player_inventory):
 #### ENEMY ####
 def enemy_draw(win, y, x, sprite):
     win.addstr(y, x, sprite)
-###############
+
 
 def enemy_attack(enemy_y, enemy_x, player_y, player_x):
     for i in range(enemy_y - 1, enemy_y + 2):
@@ -156,6 +154,125 @@ def enemy_attack(enemy_y, enemy_x, player_y, player_x):
                     return True
                 else:
                     continue
+###############
+
+#### MAPA1 ####
+def draw_map1(win):
+    draw_room_map1(win)
+    draw_corr_map1(win)
+
+
+def draw_room_map1(win):
+    numero_salas = 7
+
+    dimensoes_salas = [
+        [8,16], #[y,x]
+        [9,13],
+        [10,15], 
+        [6,30],
+        [15,15],
+        [8,23],
+        [8,24] 
+    ]
+
+    coordenadas_salas = [
+        [3,5], 
+        [22,35],
+        [19,5], 
+        [3,65],
+        [13,110],
+        [9,30],
+        [18,68] 
+    ]
+
+    for i in range(numero_salas):
+        altura = dimensoes_salas[i][0]
+        comprimento = dimensoes_salas[i][1]
+        y = coordenadas_salas[i][0]
+        x = coordenadas_salas[i][1]
+
+    
+        for i in range(y, y + altura):
+            win.addstr(i, x, '.' * comprimento) 
+        
+        window = win.subwin(altura+2, comprimento+2, y-1, x-1)
+        window.border()
+
+
+def draw_corr_map1(win):
+    dimensoes_vertical = [
+            (6), 
+            (2), 
+            (3), 
+            (9),
+            (2), 
+            (2), 
+            (3),
+            (2),
+            (5), 
+            (2), 
+        ]
+
+    coordenadas_vertical = [
+        [11,6],
+        [17,18],
+        [29,6],
+        [23,27],
+        [29,78],
+        [28,124],
+        [10,111],
+        [8,105],
+        [4,30],
+        [16,69]
+    ]
+
+    dimensoes_horizontal = [
+        (12),
+        (20),
+        (8), 
+        (30), 
+        (45),
+        (6),
+        (10), 
+        (35), 
+        (16), 
+    ]
+
+    coordenadas_horizontal = [
+        [16,7],
+        [31,7],
+        [22,27],
+        [30,48],
+        [29,79],
+        [10,105],
+        [8,95],
+        [3,30],
+        [16,53]
+    ]
+    
+    for j in range(len(coordenadas_vertical)):
+
+        vertical = dimensoes_vertical[j]
+        y_vertical = coordenadas_vertical[j][0]
+        x_vertical = coordenadas_vertical[j][1]
+
+        for i in range(y_vertical, y_vertical + vertical):
+            win.addstr(i,x_vertical, ".")
+        
+    for k in range(len(coordenadas_horizontal)):
+
+        horizontal = dimensoes_horizontal[k]
+        y_horizontal = coordenadas_horizontal[k][0]
+        x_horizontal = coordenadas_horizontal[k][1]
+
+        #imprimindo corredor horizontal
+        for i in range(x_horizontal, x_horizontal+horizontal):
+            win.addstr(y_horizontal,i, ".")
+###############
+
+
+
+
 
 
 
