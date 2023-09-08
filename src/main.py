@@ -31,7 +31,7 @@ def main(stdsrc):
     key = 0
     while True:
         curses.resize_term(35,135)
-        draw_map1(window)
+        draw_map2(window)
         player_draw_sprite(window, PLAYER_DIRECTION, PLAYER_Y, PLAYER_X)
         
         
@@ -270,8 +270,118 @@ def draw_corr_map1(win):
             win.addstr(y_horizontal,i, ".")
 ###############
 
+#### MAPA2 ####
+def draw_map2(win):
+    draw_room_map2(win)
+    draw_corr_map2(win)
 
 
+def draw_room_map2(win):
+    numero_salas = 5
+
+    dimensoes_salas = [
+        [8,16], #[y,x]
+        [10,15],
+        [6,30],
+        [15,15],
+        [8,24]
+    ]
+
+    coordenadas_salas = [
+        [4,10], 
+        [19,10], 
+        [3,65],
+        [13,110],
+        [20,50]
+        
+    ]
+
+    for i in range(numero_salas):
+
+        altura = dimensoes_salas[i][0]
+        comprimento = dimensoes_salas[i][1]
+        y = coordenadas_salas[i][0]
+        x = coordenadas_salas[i][1]
+
+
+        for i in range(y, y + altura):
+            win.addstr(i, x, '.' * comprimento) 
+
+        
+        window = win.subwin(altura+2, comprimento+2, y-1, x-1)
+        window.border()
+
+
+def draw_corr_map2(win):
+    dimensoes_vertical = [
+    (8), 
+    (2), 
+    (9),
+    (3), 
+    (2), 
+    (3),
+    (2),
+    (5), 
+    (5),
+    ]
+
+    coordenadas_vertical = [
+        [9,6],
+        [17,18],
+        [23,27],
+        [29,12],
+        [28,124],
+        [10,111],
+        [8,105],
+        [4,30],
+        [25,79]
+    ]
+
+    dimensoes_horizontal = [
+        (12),
+        (15),
+        (23), 
+        (2),
+        (5), 
+        (45),
+        (6),
+        (10), 
+        (35), 
+        (6), 
+    ]
+
+    coordenadas_horizontal = [
+        [16,7],
+        [31,13],
+        [22,27],
+        [9,8],
+        [8,26],
+        [29,79],
+        [10,105],
+        [8,95],
+        [3,30],
+        [24,74],
+    ]
+
+    for j in range(len(coordenadas_vertical)):
+
+        vertical = dimensoes_vertical[j]
+        y_vertical = coordenadas_vertical[j][0]
+        x_vertical = coordenadas_vertical[j][1]
+
+        for i in range(y_vertical, y_vertical + vertical):
+            win.addstr(i,x_vertical, ".")
+        
+        
+    for k in range(len(coordenadas_horizontal)):
+
+        horizontal = dimensoes_horizontal[k]
+        y_horizontal = coordenadas_horizontal[k][0]
+        x_horizontal = coordenadas_horizontal[k][1]
+
+        for i in range(x_horizontal, x_horizontal + horizontal):
+            win.addstr(y_horizontal,i, ".")
+###############
 
 
 
