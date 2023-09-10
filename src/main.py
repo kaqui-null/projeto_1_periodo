@@ -1,6 +1,7 @@
 import curses
 from curses import wrapper
 
+#TODO: fazer que troque de mapa no menu
 
 def main(stdsrc):
     WIN_Y = 35
@@ -26,8 +27,11 @@ def main(stdsrc):
     except:
         pass
 
+    splash_screen(stdsrc)
     window = curses.newwin(WIN_Y, WIN_X)
-    
+    window.nodelay(True)
+    menu(window)
+
     key = 0
     while True:
         curses.resize_term(35,135)
@@ -445,8 +449,127 @@ def you_won(win):
         i += 1
 ###############
 
+#SPLASH_SCREEN#
+def splash_screen(stdscr):
+    stdscr.clear()
+    
+    curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_WHITE)
+    WHITE = curses. color_pair(1)
+    curses.init_pair(2,curses.COLOR_GREEN, curses.COLOR_GREEN)
+    GREEN = curses.color_pair(2)
+    curses.init_pair(3, curses.COLOR_GREEN, curses.COLOR_GREEN)
+    GREEN = curses.color_pair(3)
+    curses.init_pair(4, curses.COLOR_MAGENTA, curses.COLOR_MAGENTA)
+    MAGENTA = curses.color_pair(4)
+
+    # medindo o tamanho total do terminal
+    alturaDaTela, comprimentoDaTela = stdscr.getmaxyx()
+
+    # array com o texto
+    texto = [
+            ["#","#","#","#","#","#","#","#","#","#"," "," "," "," "," ","#","#","#","#","#","#","#","#","#","#","#","#","#"," "," ","#","#","#","#","#","#","#","#","#","#","#"," "," ","#","#","#"," "," "," "," "," "," ","#","#","#"," "," ","#","#","#","#","#","#","#","#","#"],
+            ["#","#","#","#","#","#","#","#","#","#","#","#","#"," "," ","#","#","#","#","#","#","#","#","#","#","#","#","#"," "," ","#","#","#","#","#","#","#","#","#","#","#"," "," ","#","#","#"," "," "," "," "," "," ","#","#","#"," "," ","#","#","#","#","#","#","#","#","#"],
+            ["#","#","#"," "," "," "," "," "," "," ","#","#","#"," "," ","#","#","#"," "," "," "," "," "," "," ","#","#","#"," "," ","#","#","#"," "," "," "," "," "," "," "," "," "," ","#","#","#"," "," "," "," "," "," ","#","#","#"," "," ","#","#","#"," "," "," "," "," "," "],
+            ["#","#","#"," "," "," "," "," "," "," ","#","#","#"," "," ","#","#","#"," "," "," "," "," "," "," ","#","#","#"," "," ","#","#","#"," "," "," "," "," "," "," "," "," "," ","#","#","#"," "," "," "," "," "," ","#","#","#"," "," ","#","#","#"," "," "," "," "," "," "],
+            ["#","#","#","#","#","#","#","#","#","#"," "," "," "," "," ","#","#","#"," "," "," "," "," "," "," ","#","#","#"," "," ","#","#","#"," "," "," "," ","#","#","#","#"," "," ","#","#","#"," "," "," "," "," "," ","#","#","#"," "," ","#","#","#","#","#","#"," "," "," "],
+            ["#","#","#"," "," "," "," "," "," "," ","#","#","#"," "," ","#","#","#"," "," "," "," "," "," "," ","#","#","#"," "," ","#","#","#"," "," "," "," "," "," ","#","#"," "," ","#","#","#"," "," "," "," "," "," ","#","#","#"," "," ","#","#","#"," "," "," "," "," "," "],
+            ["#","#","#"," "," "," "," "," "," "," ","#","#","#"," "," ","#","#","#"," "," "," "," "," "," "," ","#","#","#"," "," ","#","#","#"," "," "," "," "," "," ","#","#"," "," ","#","#","#"," "," "," "," "," "," ","#","#","#"," "," ","#","#","#"," "," "," "," "," "," "],
+            ["#","#","#"," "," "," "," "," "," "," ","#","#","#"," "," ","#","#","#","#","#","#","#","#","#","#","#","#","#"," "," ","#","#","#","#","#","#","#","#","#","#","#"," "," ","#","#","#","#","#","#","#","#","#","#","#","#"," "," ","#","#","#","#","#","#","#","#","#"],
+            ["#","#","#"," "," "," "," "," "," "," ","#","#","#"," "," ","#","#","#","#","#","#","#","#","#","#","#","#","#"," "," ","#","#","#","#","#","#","#","#","#","#","#"," "," ","#","#","#","#","#","#","#","#","#","#","#","#"," "," ","#","#","#","#","#","#","#","#","#"]
+        ]
+
+    for i in range(len(texto)):
+        for j in range(len(texto[i])):
+            # posicao que o texto deve aparecer
+            alturaDaArray = len(texto)
+            comprimentoDaArray = len(texto[i])
+            y = (alturaDaTela - alturaDaArray) // 2
+            x = (comprimentoDaTela - comprimentoDaArray) // 2
+
+            #coordenadas
+            y = y+i
+            x = x+j
 
 
+            #imprimir o nome rogue com atributos
+            if texto[i][j]=="#":
+
+                curses.napms(10)
+                stdscr.attron(GREEN)
+                stdscr.addstr(y+2,x-2, texto[i][j])
+                stdscr.attron(GREEN)
+                stdscr.attron(MAGENTA)
+                stdscr.addstr(y+1,x-1, texto[i][j])
+                stdscr.attron(MAGENTA)
+                stdscr.attron(WHITE)
+                stdscr.addstr(y,x,texto[i][j])
+                stdscr.attroff(WHITE)
+            else: 
+                pass
+            stdscr.refresh()
+
+    stdscr.getch()
+###############
+
+#### MENU #####
+def print_menu(win, selected_opcoes_idx):
+    menu = ['opcao 1', 'opcao 2', 'opcao 3', 'exit']
+
+    win.clear()
+
+    #win.addstr(0, 0, "start of print menu, idx =" + str(selected_opcoes_idx))
+    #curses.napms(1000)
+    curses.init_pair(1, curses.COLOR_MAGENTA, curses.COLOR_GREEN)
+    MAGENTA_AND_GREEN = curses.color_pair(1)
+   
+    h, w = win.getmaxyx()
+
+    for idx, opcoes in enumerate(menu):
+        x = w//2 - len(opcoes)//2
+        y = h//2 - len(menu)//2 + idx
+        if idx == selected_opcoes_idx:
+            win.attron(MAGENTA_AND_GREEN)
+            win.addstr(y, x, opcoes)
+            win.attroff(MAGENTA_AND_GREEN)
+        else: 
+            win.addstr(y, x, opcoes)
+
+    win.refresh()
+
+
+def menu(win):
+    menu = ['opcao 1', 'opcao 2', 'opcao 3', 'exit']
+
+    opcaoAtual_opcoes_idx = 0
+    
+    key = 0
+    while 1: 
+        print_menu(win, opcaoAtual_opcoes_idx)
+        key = win.getch()
+
+        win.clear()
+
+        #win.addstr(0,0, "start of while loop, key =" + str(key))
+        #curses.napms(1000)
+        if key == curses.KEY_UP and opcaoAtual_opcoes_idx > 0:
+            opcaoAtual_opcoes_idx -= 1
+            #win.addstr(1,0,"if key = KEY_UP")
+            #curses.napms(1000)
+        elif key == curses.KEY_DOWN and opcaoAtual_opcoes_idx < len(menu)-1:
+            opcaoAtual_opcoes_idx += 1
+            #win.addstr(1,0,"if key = KEY_UP")
+            #curses.napms(1000)
+        elif key == curses.KEY_ENTER :
+            win.addstr(0, 0, "voce selecionou {}".format(menu[opcaoAtual_opcoes_idx]))
+            win.refresh()
+            win.getch()
+            if opcaoAtual_opcoes_idx == len(menu)-1:
+                break
+
+        print_menu(win, opcaoAtual_opcoes_idx)
+
+        win.refresh()
+###############
 
 if __name__ == "__main__":
    wrapper(main)
