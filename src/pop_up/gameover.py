@@ -1,6 +1,4 @@
 import curses
-from curses import wrapper
-import time
 
 def game_over(stdscr):
     stdscr.clear()
@@ -33,5 +31,4 @@ def game_over(stdscr):
         curses.napms(1000)
 
     stdscr.getch()
-wrapper(game_over)
 

@@ -2,7 +2,7 @@ import curses
 
 class Enemy:
 
-    def __init__(self,win, hp, forca, origin, player_pos):
+    def __init__(self, hp, win, forca, origin, player_pos):
         self.hp = hp
         self.win = win
         self.forca = forca

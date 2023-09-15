@@ -3,11 +3,11 @@ import curses
 class Mapa2:
     def __init__(self, win):
         self.win = win
-
+#
     def desenhando_salas(self, altura, comprimento, y, x):
         for i in range(y, y + altura):
             self.win.addstr(i, x, '.' * comprimento)
-
+#
     def imprimindo_salas(self):
         numero_salas = 5
 
@@ -41,7 +41,7 @@ class Mapa2:
             
             window = self.win.subwin(altura+2, comprimento+2, y-1, x-1)
             window.border()
-            
+ #           
     def desenhando_corredor_vertical(self, y, x, vertical):
         for i in range(y, y + vertical):
             self.win.addstr(i,x, ".")

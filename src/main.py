@@ -1,12 +1,25 @@
 import curses
 from curses import wrapper
 
-from player import Player
-from enemy import Enemy
-from mapa import win
-
+#TODO: fazer que troque de mapa no menu
 
 def main(stdsrc):
+    WIN_Y = 35
+    WIN_X = 135
+
+    PLAYER_X = 5
+    PLAYER_Y = 5
+    PLAYER_DIRECTION = "up"
+    PLAYER_DMG = 1
+    PLAYER_HP = [10, 10]
+    PLAYER_INVENTORY = []
+
+    ENEMY_HP = 3
+    ENEMY_DMG = 1
+    ENEMY_Y = 8
+    ENEMY_X = 8
+    ENEMY_DIRECTION = "up"
+
     stdsrc.nodelay(True)
 
     try:
@@ -14,16 +27,16 @@ def main(stdsrc):
     except:
         pass
 
-    window = win.Win(stdsrc, 35, 135)
-    window_src = window.new_win()
-    
-    player = Player(window_src, [window.y, window.x], [5, 5, "up"], 3, 3)
-    enemy = Enemy(window_src, 3, 1,[8, 8, "up"], [player.origin_y, player.origin_x])
+    splash_screen(stdsrc)
+    window = curses.newwin(WIN_Y, WIN_X)
+    window.nodelay(True)
+    menu(window)
 
     key = 0
     while True:
         curses.resize_term(35,135)
-        player.draw_sprite()
+        draw_map2(window)
+        player_draw_sprite(window, PLAYER_DIRECTION, PLAYER_Y, PLAYER_X)
         
         
         try:
@@ -33,37 +46,530 @@ def main(stdsrc):
 
         if key != None:
             if key == "q":
+                print("you quit") # change to a centered message
+                curses.napms(1000) 
                 break
         
 
-            window_src.erase()
-            window_src.insch(5,5,curses.ACS_DIAMOND)
-            player.walk(key)
-            player.draw_sprite()
+            window.erase()
+            window.insch(5,5,curses.ACS_DIAMOND)
+            player_origin = player_walk(WIN_X, WIN_Y, key, PLAYER_X, PLAYER_Y, PLAYER_DIRECTION)
+            PLAYER_Y = player_origin[0]
+            PLAYER_X = player_origin[1]
+            PLAYER_DIRECTION = player_origin[2]
+            player_draw_sprite(window, PLAYER_DIRECTION, PLAYER_Y, PLAYER_X)
 
-            if enemy.die() != True:
-                enemy.draw_sprite()
-
-                enemy.player_pos = [player.origin_y, player.origin_x]
-                if enemy.attack() == True:
-                    player.is_hurt(enemy.forca)
+            if ENEMY_HP > 0:
+                window.addstr(ENEMY_Y, ENEMY_X, "@")
+                if enemy_attack(ENEMY_Y, ENEMY_X, PLAYER_Y, PLAYER_X) == True:
+                    PLAYER_HP[0] -= ENEMY_DMG
 
             if key == "x":
-                if ([enemy.origin_y, enemy.origin_x] == player.attack()):
-                    enemy.hp -= player.dmg
+                if ([ENEMY_Y, ENEMY_X] == player_attack(PLAYER_Y, PLAYER_X, PLAYER_DIRECTION)):
+                    ENEMY_HP -= PLAYER_DMG
                 
             if key == "z":
-                player.use()
-                stdsrc.addstr(0,0, str(player.inventario))
+                player_use(window, PLAYER_Y, PLAYER_X, PLAYER_DIRECTION, PLAYER_INVENTORY)
+                stdsrc.addstr(0,0, str(PLAYER_INVENTORY))
 
-        if player.hp <= 0:
-            #game_over()
+        if PLAYER_HP[0] <= 0:
+            game_over(window)
             break
         
-        window_src.refresh()
-        window_src.border()
+        print(ENEMY_HP, " ", PLAYER_HP)
+
+        window.refresh()
+        window.border()
         stdsrc.refresh()
 
+## PLAYER ###
+def player_draw_sprite(win, player_direction, player_y, player_x):
+    switcher = {
+        "up":"^",
+        "down":"v",
+        "left": "<",
+        "right": ">"
+            }
+    curr_sprite = switcher.get(player_direction, "invalid direction error")
+    win.addstr(player_y, player_x, curr_sprite)
+
+
+def player_walk(window_x, window_y, key, player_x, player_y, player_direction):
+    if key == "KEY_LEFT" and  0 != player_x - 1:
+        player_x -= 1
+        player_direction = "left"
+        return [player_y, player_x, player_direction]
+    elif key == "KEY_RIGHT" and  window_x != player_x + 2:
+        player_x += 1
+        player_direction = "right"
+        return [player_y, player_x, player_direction]
+    elif key == "KEY_UP" and  0 != player_y - 1:
+        player_y -= 1
+        player_direction = "up"
+        return [player_y, player_x, player_direction]
+    elif key == "KEY_DOWN" and  window_y != player_y + 2:
+        player_y += 1
+        player_direction = "down"
+        return [player_y, player_x, player_direction]
+    else:
+        return [player_y, player_x, player_direction]
+
+
+def player_attack(player_y, player_x, player_direction):
+    switcher = {
+        "up":[player_y - 1, player_x],
+        "down":[player_y + 1, player_x],
+        "left": [player_y, player_x - 1],
+        "right": [player_y, player_x + 1]
+            }
+    return switcher.get(player_direction, "invalid direction")
+
+
+def player_use(win, player_y, player_x, player_direction, player_inventory):
+    switcher_ver = {
+        "up": int(player_y - 1),
+        "down": int(player_y + 1)
+            }
+    switcher_hor = {
+        "left": int(player_x - 1),
+        "right": int(player_x + 1)
+    }
+    coord_y = switcher_ver.get(player_direction, - 1)
+    coord_x = switcher_hor.get(player_direction, - 1)
+
+    visualized_vertical = win.inch(coord_y, int(player_x))
+    visualized_horizontal = win.inch(int(player_y) ,coord_x)
+
+    if (visualized_horizontal == curses.ACS_DIAMOND) or (visualized_vertical == curses.ACS_DIAMOND):
+        player_inventory.append(win.inch(coord_y, int(player_x)))
+    else:
+        return False
+##############
+
+#### ENEMY ####
+def enemy_draw(win, y, x, sprite):
+    win.addstr(y, x, sprite)
+
+
+def enemy_attack(enemy_y, enemy_x, player_y, player_x):
+    for i in range(enemy_y - 1, enemy_y + 2):
+            for j in range(enemy_x - 1, enemy_y + 2):
+                if [player_y, player_x] == [i, j]:
+                    return True
+                else:
+                    continue
+###############
+
+#### MAPA1 ####
+def draw_map1(win):
+    draw_room_map1(win)
+    draw_corr_map1(win)
+
+
+def draw_room_map1(win):
+    numero_salas = 7
+
+    dimensoes_salas = [
+        [8,16], #[y,x]
+        [9,13],
+        [10,15], 
+        [6,30],
+        [15,15],
+        [8,23],
+        [8,24] 
+    ]
+
+    coordenadas_salas = [
+        [3,5], 
+        [22,35],
+        [19,5], 
+        [3,65],
+        [13,110],
+        [9,30],
+        [18,68] 
+    ]
+
+    for i in range(numero_salas):
+        altura = dimensoes_salas[i][0]
+        comprimento = dimensoes_salas[i][1]
+        y = coordenadas_salas[i][0]
+        x = coordenadas_salas[i][1]
+
+    
+        for i in range(y, y + altura):
+            win.addstr(i, x, '.' * comprimento) 
+        
+        window = win.subwin(altura+2, comprimento+2, y-1, x-1)
+        window.border()
+
+
+def draw_corr_map1(win):
+    dimensoes_vertical = [
+            (6), 
+            (2), 
+            (3), 
+            (9),
+            (2), 
+            (2), 
+            (3),
+            (2),
+            (5), 
+            (2), 
+        ]
+
+    coordenadas_vertical = [
+        [11,6],
+        [17,18],
+        [29,6],
+        [23,27],
+        [29,78],
+        [28,124],
+        [10,111],
+        [8,105],
+        [4,30],
+        [16,69]
+    ]
+
+    dimensoes_horizontal = [
+        (12),
+        (20),
+        (8), 
+        (30), 
+        (45),
+        (6),
+        (10), 
+        (35), 
+        (16), 
+    ]
+
+    coordenadas_horizontal = [
+        [16,7],
+        [31,7],
+        [22,27],
+        [30,48],
+        [29,79],
+        [10,105],
+        [8,95],
+        [3,30],
+        [16,53]
+    ]
+    
+    for j in range(len(coordenadas_vertical)):
+
+        vertical = dimensoes_vertical[j]
+        y_vertical = coordenadas_vertical[j][0]
+        x_vertical = coordenadas_vertical[j][1]
+
+        for i in range(y_vertical, y_vertical + vertical):
+            win.addstr(i,x_vertical, ".")
+        
+    for k in range(len(coordenadas_horizontal)):
+
+        horizontal = dimensoes_horizontal[k]
+        y_horizontal = coordenadas_horizontal[k][0]
+        x_horizontal = coordenadas_horizontal[k][1]
+
+        #imprimindo corredor horizontal
+        for i in range(x_horizontal, x_horizontal+horizontal):
+            win.addstr(y_horizontal,i, ".")
+###############
+
+#### MAPA2 ####
+def draw_map2(win):
+    draw_room_map2(win)
+    draw_corr_map2(win)
+
+
+def draw_room_map2(win):
+    numero_salas = 5
+
+    dimensoes_salas = [
+        [8,16], #[y,x]
+        [10,15],
+        [6,30],
+        [15,15],
+        [8,24]
+    ]
+
+    coordenadas_salas = [
+        [4,10], 
+        [19,10], 
+        [3,65],
+        [13,110],
+        [20,50]
+        
+    ]
+
+    for i in range(numero_salas):
+
+        altura = dimensoes_salas[i][0]
+        comprimento = dimensoes_salas[i][1]
+        y = coordenadas_salas[i][0]
+        x = coordenadas_salas[i][1]
+
+
+        for i in range(y, y + altura):
+            win.addstr(i, x, '.' * comprimento) 
+
+        
+        window = win.subwin(altura+2, comprimento+2, y-1, x-1)
+        window.border()
+
+
+def draw_corr_map2(win):
+    dimensoes_vertical = [
+    (8), 
+    (2), 
+    (9),
+    (3), 
+    (2), 
+    (3),
+    (2),
+    (5), 
+    (5),
+    ]
+
+    coordenadas_vertical = [
+        [9,6],
+        [17,18],
+        [23,27],
+        [29,12],
+        [28,124],
+        [10,111],
+        [8,105],
+        [4,30],
+        [25,79]
+    ]
+
+    dimensoes_horizontal = [
+        (12),
+        (15),
+        (23), 
+        (2),
+        (5), 
+        (45),
+        (6),
+        (10), 
+        (35), 
+        (6), 
+    ]
+
+    coordenadas_horizontal = [
+        [16,7],
+        [31,13],
+        [22,27],
+        [9,8],
+        [8,26],
+        [29,79],
+        [10,105],
+        [8,95],
+        [3,30],
+        [24,74],
+    ]
+
+    for j in range(len(coordenadas_vertical)):
+
+        vertical = dimensoes_vertical[j]
+        y_vertical = coordenadas_vertical[j][0]
+        x_vertical = coordenadas_vertical[j][1]
+
+        for i in range(y_vertical, y_vertical + vertical):
+            win.addstr(i,x_vertical, ".")
+        
+        
+    for k in range(len(coordenadas_horizontal)):
+
+        horizontal = dimensoes_horizontal[k]
+        y_horizontal = coordenadas_horizontal[k][0]
+        x_horizontal = coordenadas_horizontal[k][1]
+
+        for i in range(x_horizontal, x_horizontal + horizontal):
+            win.addstr(y_horizontal,i, ".")
+###############
+
+#### POPUP ####
+def game_over(win):
+    win.clear()
+    curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
+    RED_AND_BLACK = curses.color_pair(1)
+
+    gameOver = "GAME OVER!!"
+    y,x = win.getmaxyx()
+
+    y= y//2
+    x = x//2-len(gameOver)
+    i = 5
+    while i < 10:
+        win.refresh()
+
+        win.addstr(y,x, gameOver)
+
+        win.refresh()
+        curses.napms(1000)
+
+        win.attron(RED_AND_BLACK)
+        win.addstr(y,x, gameOver)
+        win.attroff(RED_AND_BLACK)
+
+        win.refresh()
+        curses.napms(1000)
+        i += 1
+
+
+def you_won(win):
+    win.clear()
+    curses.curs_set(0)
+    curses.resize_term(35,135)
+
+    curses.init_pair(1, curses.COLOR_GREEN, curses.COLOR_BLACK)
+    GREEN_AND_BLACK = curses.color_pair(1)
+
+    youWon = "YOU WON!!"
+    y,x = win.getmaxyx()
+
+    y= y//2
+    x = x//2-len(youWon)
+
+    i = 5
+    while i < 10:
+
+        win.refresh()
+
+        win.addstr(y,x, youWon)
+
+        win.refresh()
+        curses.napms(1000)
+
+        win.attron(GREEN_AND_BLACK)
+        win.addstr(y,x, youWon)
+        win.attroff(GREEN_AND_BLACK)
+
+        win.refresh()
+        curses.napms(1000)
+        i += 1
+###############
+
+#SPLASH_SCREEN#
+def splash_screen(stdscr):
+    stdscr.clear()
+    
+    curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_WHITE)
+    WHITE = curses. color_pair(1)
+    curses.init_pair(2,curses.COLOR_GREEN, curses.COLOR_GREEN)
+    GREEN = curses.color_pair(2)
+    curses.init_pair(3, curses.COLOR_GREEN, curses.COLOR_GREEN)
+    GREEN = curses.color_pair(3)
+    curses.init_pair(4, curses.COLOR_MAGENTA, curses.COLOR_MAGENTA)
+    MAGENTA = curses.color_pair(4)
+
+    # medindo o tamanho total do terminal
+    alturaDaTela, comprimentoDaTela = stdscr.getmaxyx()
+
+    # array com o texto
+    texto = [
+            ["#","#","#","#","#","#","#","#","#","#"," "," "," "," "," ","#","#","#","#","#","#","#","#","#","#","#","#","#"," "," ","#","#","#","#","#","#","#","#","#","#","#"," "," ","#","#","#"," "," "," "," "," "," ","#","#","#"," "," ","#","#","#","#","#","#","#","#","#"],
+            ["#","#","#","#","#","#","#","#","#","#","#","#","#"," "," ","#","#","#","#","#","#","#","#","#","#","#","#","#"," "," ","#","#","#","#","#","#","#","#","#","#","#"," "," ","#","#","#"," "," "," "," "," "," ","#","#","#"," "," ","#","#","#","#","#","#","#","#","#"],
+            ["#","#","#"," "," "," "," "," "," "," ","#","#","#"," "," ","#","#","#"," "," "," "," "," "," "," ","#","#","#"," "," ","#","#","#"," "," "," "," "," "," "," "," "," "," ","#","#","#"," "," "," "," "," "," ","#","#","#"," "," ","#","#","#"," "," "," "," "," "," "],
+            ["#","#","#"," "," "," "," "," "," "," ","#","#","#"," "," ","#","#","#"," "," "," "," "," "," "," ","#","#","#"," "," ","#","#","#"," "," "," "," "," "," "," "," "," "," ","#","#","#"," "," "," "," "," "," ","#","#","#"," "," ","#","#","#"," "," "," "," "," "," "],
+            ["#","#","#","#","#","#","#","#","#","#"," "," "," "," "," ","#","#","#"," "," "," "," "," "," "," ","#","#","#"," "," ","#","#","#"," "," "," "," ","#","#","#","#"," "," ","#","#","#"," "," "," "," "," "," ","#","#","#"," "," ","#","#","#","#","#","#"," "," "," "],
+            ["#","#","#"," "," "," "," "," "," "," ","#","#","#"," "," ","#","#","#"," "," "," "," "," "," "," ","#","#","#"," "," ","#","#","#"," "," "," "," "," "," ","#","#"," "," ","#","#","#"," "," "," "," "," "," ","#","#","#"," "," ","#","#","#"," "," "," "," "," "," "],
+            ["#","#","#"," "," "," "," "," "," "," ","#","#","#"," "," ","#","#","#"," "," "," "," "," "," "," ","#","#","#"," "," ","#","#","#"," "," "," "," "," "," ","#","#"," "," ","#","#","#"," "," "," "," "," "," ","#","#","#"," "," ","#","#","#"," "," "," "," "," "," "],
+            ["#","#","#"," "," "," "," "," "," "," ","#","#","#"," "," ","#","#","#","#","#","#","#","#","#","#","#","#","#"," "," ","#","#","#","#","#","#","#","#","#","#","#"," "," ","#","#","#","#","#","#","#","#","#","#","#","#"," "," ","#","#","#","#","#","#","#","#","#"],
+            ["#","#","#"," "," "," "," "," "," "," ","#","#","#"," "," ","#","#","#","#","#","#","#","#","#","#","#","#","#"," "," ","#","#","#","#","#","#","#","#","#","#","#"," "," ","#","#","#","#","#","#","#","#","#","#","#","#"," "," ","#","#","#","#","#","#","#","#","#"]
+        ]
+
+    for i in range(len(texto)):
+        for j in range(len(texto[i])):
+            # posicao que o texto deve aparecer
+            alturaDaArray = len(texto)
+            comprimentoDaArray = len(texto[i])
+            y = (alturaDaTela - alturaDaArray) // 2
+            x = (comprimentoDaTela - comprimentoDaArray) // 2
+
+            #coordenadas
+            y = y+i
+            x = x+j
+
+
+            #imprimir o nome rogue com atributos
+            if texto[i][j]=="#":
+
+                curses.napms(10)
+                stdscr.attron(GREEN)
+                stdscr.addstr(y+2,x-2, texto[i][j])
+                stdscr.attron(GREEN)
+                stdscr.attron(MAGENTA)
+                stdscr.addstr(y+1,x-1, texto[i][j])
+                stdscr.attron(MAGENTA)
+                stdscr.attron(WHITE)
+                stdscr.addstr(y,x,texto[i][j])
+                stdscr.attroff(WHITE)
+            else: 
+                pass
+            stdscr.refresh()
+
+    stdscr.getch()
+###############
+
+#### MENU #####
+def print_menu(win, selected_opcoes_idx):
+    menu = ['opcao 1', 'opcao 2', 'opcao 3', 'exit']
+
+    win.clear()
+
+    #win.addstr(0, 0, "start of print menu, idx =" + str(selected_opcoes_idx))
+    #curses.napms(1000)
+    curses.init_pair(1, curses.COLOR_MAGENTA, curses.COLOR_GREEN)
+    MAGENTA_AND_GREEN = curses.color_pair(1)
+   
+    h, w = win.getmaxyx()
+
+    for idx, opcoes in enumerate(menu):
+        x = w//2 - len(opcoes)//2
+        y = h//2 - len(menu)//2 + idx
+        if idx == selected_opcoes_idx:
+            win.attron(MAGENTA_AND_GREEN)
+            win.addstr(y, x, opcoes)
+            win.attroff(MAGENTA_AND_GREEN)
+        else: 
+            win.addstr(y, x, opcoes)
+
+    win.refresh()
+
+
+def menu(win):
+    menu = ['opcao 1', 'opcao 2', 'opcao 3', 'exit']
+
+    opcaoAtual_opcoes_idx = 0
+    
+    key = 0
+    while 1: 
+        print_menu(win, opcaoAtual_opcoes_idx)
+        key = win.getch()
+
+        win.clear()
+
+        #win.addstr(0,0, "start of while loop, key =" + str(key))
+        #curses.napms(1000)
+        if key == curses.KEY_UP and opcaoAtual_opcoes_idx > 0:
+            opcaoAtual_opcoes_idx -= 1
+            #win.addstr(1,0,"if key = KEY_UP")
+            #curses.napms(1000)
+        elif key == curses.KEY_DOWN and opcaoAtual_opcoes_idx < len(menu)-1:
+            opcaoAtual_opcoes_idx += 1
+            #win.addstr(1,0,"if key = KEY_UP")
+            #curses.napms(1000)
+        elif key == curses.KEY_ENTER :
+            win.addstr(0, 0, "voce selecionou {}".format(menu[opcaoAtual_opcoes_idx]))
+            win.refresh()
+            win.getch()
+            if opcaoAtual_opcoes_idx == len(menu)-1:
+                break
+
+        print_menu(win, opcaoAtual_opcoes_idx)
+
+        win.refresh()
+###############
 
 if __name__ == "__main__":
    wrapper(main)
