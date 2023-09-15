@@ -1,13 +1,26 @@
 import curses
 from curses import wrapper
 import time
+import espada
 
 def splash_screen(stdscr):
+    stdscr.clear()
+    curses.curs_set(0)
+    if curses.has_colors():
+     curses.use_default_colors()
+    if curses.can_change_color():
+       curses.init_color(
+          255,
+          0x1c * 1000 // 0xff,
+          0x1c * 1000 // 0xff,
+          0x1c * 1000 // 0xff
+       )
+
     curses.curs_set(0)
     stdscr.clear()
     
-    curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_WHITE)
-    WHITE = curses. color_pair(1)
+    curses.init_pair(8, curses.COLOR_WHITE, curses.COLOR_WHITE)
+    WHITE = curses.color_pair(8)
 
     # medindo o tamanho total do terminal
     alturaDaTela, comprimentoDaTela = stdscr.getmaxyx()
@@ -33,9 +46,7 @@ def splash_screen(stdscr):
         ['*',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','*',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
         [' ','*','*',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','*','*',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
     ]
-
-
-
+    espada.sword(stdscr)
     for i in range(len(texto)):
 
         for j in range(len(texto[i])):
@@ -56,8 +67,7 @@ def splash_screen(stdscr):
             else: 
                 pass
             stdscr.refresh()
-            stdscr.refresh()
-
     stdscr.getch()
 wrapper(splash_screen)
+
 
