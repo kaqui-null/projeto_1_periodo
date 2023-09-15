@@ -31,8 +31,9 @@ def main(stdsrc):
 
     splash_screen(stdsrc)
     window = curses.newwin(WIN_Y, WIN_X)
-    window.nodelay(True)
+    window.keypad(True)
     menu(window)
+    window.nodelay(True)
 
     key = 0
     while True:
@@ -711,17 +712,11 @@ def menu(win):
 
         win.clear()
 
-        #win.addstr(0,0, "start of while loop, key =" + str(key))
-        #curses.napms(1000)
         if key == curses.KEY_UP and opcaoAtual_opcoes_idx > 0:
             opcaoAtual_opcoes_idx -= 1
-            #win.addstr(1,0,"if key = KEY_UP")
-            #curses.napms(1000)
         elif key == curses.KEY_DOWN and opcaoAtual_opcoes_idx < len(menu)-1:
             opcaoAtual_opcoes_idx += 1
-            #win.addstr(1,0,"if key = KEY_UP")
-            #curses.napms(1000)
-        elif key == curses.KEY_ENTER :
+        elif key == curses.KEY_ENTER or key in [10, 13]:
             win.addstr(0, 0, "voce selecionou {}".format(menu[opcaoAtual_opcoes_idx]))
             win.refresh()
             win.getch()
