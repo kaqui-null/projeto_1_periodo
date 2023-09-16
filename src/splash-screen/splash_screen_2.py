@@ -1,7 +1,7 @@
 import curses
 from curses import wrapper
 import time
-import espada
+import sword
 
 def splash_screen_2(stdscr):
     curses.curs_set(0)
@@ -44,7 +44,7 @@ def splash_screen_2(stdscr):
         [' ','*','*',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','*','*',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
     ]
     
-    espada.sword(stdscr)
+    sword.espada(stdscr)
 
     for i in range(len(texto)):
 
