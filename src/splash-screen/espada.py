@@ -1,4 +1,5 @@
 import curses
+from curses import wrapper
 
 def sword(stdscr):
     if curses.has_colors():
@@ -65,7 +66,7 @@ def sword(stdscr):
 
             y = y+i
             x = x-11+j
-
+            curses.napms(100)
             
             
             if arma[i][j] == "X" or arma[i][j] == "$":
@@ -92,4 +93,9 @@ def sword(stdscr):
                 stdscr.addstr(y,x,arma[i][j], COR1)
             else:
                 pass
+        stdscr.refresh()
+    stdscr.refresh()
+    stdscr.getch()
+
+wrapper(sword)
     
