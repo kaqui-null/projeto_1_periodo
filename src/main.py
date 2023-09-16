@@ -29,7 +29,11 @@ def main(stdsrc):
     except:
         pass
 
-    splash_screen(stdsrc)
+    splash_screen2(stdsrc)
+    curses.napms(2000)
+    stdsrc.clear()
+    stdsrc.refresh()
+    stdsrc.clear()
     window = curses.newwin(WIN_Y, WIN_X)
     window.keypad(True)
     menu(window)
@@ -556,7 +560,7 @@ def splash_screen2(stdscr):
         ['*',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','*',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
         [' ','*','*',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','*','*',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
     ]
-    sword(stdscr)
+    #sword(stdscr)
     for i in range(len(texto)):
 
         for j in range(len(texto[i])):
@@ -577,7 +581,6 @@ def splash_screen2(stdscr):
             else: 
                 pass
             stdscr.refresh()
-    stdscr.getch()
 
 def sword(stdscr):
     if curses.has_colors():
@@ -682,8 +685,8 @@ def print_menu(win, selected_opcoes_idx):
 
     #win.addstr(0, 0, "start of print menu, idx =" + str(selected_opcoes_idx))
     #curses.napms(1000)
-    curses.init_pair(1, curses.COLOR_MAGENTA, curses.COLOR_GREEN)
-    MAGENTA_AND_GREEN = curses.color_pair(1)
+    curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
+    BLACK_AND_WHITE = curses.color_pair(1)
    
     h, w = win.getmaxyx()
 
@@ -691,9 +694,9 @@ def print_menu(win, selected_opcoes_idx):
         x = w//2 - len(opcoes)//2
         y = h//2 - len(menu)//2 + idx
         if idx == selected_opcoes_idx:
-            win.attron(MAGENTA_AND_GREEN)
+            win.attron(BLACK_AND_WHITE)
             win.addstr(y, x, opcoes)
-            win.attroff(MAGENTA_AND_GREEN)
+            win.attroff(BLACK_AND_WHITE)
         else: 
             win.addstr(y, x, opcoes)
 
