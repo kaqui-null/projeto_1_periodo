@@ -6,9 +6,11 @@ from curses import wrapper
 #TODO: opções
 
 def main(stdsrc):
+    global WIN_Y, WIN_X
     WIN_Y = 35
     WIN_X = 135
 
+    global PLAYER_X, PLAYER_Y, PLAYER_DIRECTION, PLAYER_DMG, PLAYER_HP, PLAYER_INVENTORY
     PLAYER_X = 5
     PLAYER_Y = 5
     PLAYER_DIRECTION = "up"
@@ -16,6 +18,7 @@ def main(stdsrc):
     PLAYER_HP = [10, 10]
     PLAYER_INVENTORY = []
 
+    global ENEMY_DIRECTION, ENEMY_DMG, ENEMY_HP, ENEMY_X, ENEMY_Y
     ENEMY_HP = 3
     ENEMY_DMG = 1
     ENEMY_Y = 8
@@ -39,12 +42,14 @@ def main(stdsrc):
     choice = menu(window)
     window.nodelay(True)
 
+    PLAYER_Y, PLAYER_X = set_player_origin(choice)
+
     key = 0
     while True:
         curses.resize_term(35,135)
         get_menu_choice(choice, window)
-        player_draw_sprite(window, PLAYER_DIRECTION, PLAYER_Y, PLAYER_X)
-        
+        #player_draw_sprite(window, PLAYER_DIRECTION, PLAYER_Y, PLAYER_X)
+        player_draw_sprite(window)
         
         try:
             key = stdsrc.getkey()
@@ -64,7 +69,8 @@ def main(stdsrc):
             PLAYER_Y = player_origin[0]
             PLAYER_X = player_origin[1]
             PLAYER_DIRECTION = player_origin[2]
-            player_draw_sprite(window, PLAYER_DIRECTION, PLAYER_Y, PLAYER_X)
+            #player_draw_sprite(window, PLAYER_DIRECTION, PLAYER_Y, PLAYER_X)
+            player_draw_sprite(window)
 
             if ENEMY_HP > 0:
                 window.addstr(ENEMY_Y, ENEMY_X, "@")
@@ -103,15 +109,15 @@ def get_menu_choice(choice, win):
 #############
 
 ## PLAYER ###
-def player_draw_sprite(win, player_direction, player_y, player_x):
+def player_draw_sprite(win):
     switcher = {
         "up":"^",
         "down":"v",
         "left": "<",
         "right": ">"
             }
-    curr_sprite = switcher.get(player_direction, "invalid direction error")
-    win.addstr(player_y, player_x, curr_sprite)
+    curr_sprite = switcher.get(PLAYER_DIRECTION, "invalid direction error")
+    win.addstr(PLAYER_Y, PLAYER_X, curr_sprite)
 
 
 def player_walk(window_x, window_y, key, player_x, player_y, player_direction):
@@ -164,6 +170,10 @@ def player_use(win, player_y, player_x, player_direction, player_inventory):
         player_inventory.append(win.inch(coord_y, int(player_x)))
     else:
         return False
+
+
+def set_player_origin(choice):
+    return PLAYER_Y, PLAYER_X
 ##############
 
 #### ENEMY ####
