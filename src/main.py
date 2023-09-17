@@ -48,7 +48,6 @@ def main(stdsrc):
     while True:
         curses.resize_term(35,135)
         get_menu_choice(choice, window)
-        #player_draw_sprite(window, PLAYER_DIRECTION, PLAYER_Y, PLAYER_X)
         player_draw_sprite(window)
         
         try:
@@ -65,11 +64,10 @@ def main(stdsrc):
 
             window.erase()
             #window.insch(5,5,curses.ACS_DIAMOND)
-            player_origin = player_walk(WIN_X, WIN_Y, key, PLAYER_X, PLAYER_Y, PLAYER_DIRECTION)
+            player_origin = player_walk(key)
             PLAYER_Y = player_origin[0]
             PLAYER_X = player_origin[1]
             PLAYER_DIRECTION = player_origin[2]
-            #player_draw_sprite(window, PLAYER_DIRECTION, PLAYER_Y, PLAYER_X)
             player_draw_sprite(window)
 
             if ENEMY_HP > 0:
@@ -120,25 +118,26 @@ def player_draw_sprite(win):
     win.addstr(PLAYER_Y, PLAYER_X, curr_sprite)
 
 
-def player_walk(window_x, window_y, key, player_x, player_y, player_direction):
-    if key == "KEY_LEFT" and  0 != player_x - 1:
-        player_x -= 1
-        player_direction = "left"
-        return [player_y, player_x, player_direction]
-    elif key == "KEY_RIGHT" and  window_x != player_x + 2:
-        player_x += 1
-        player_direction = "right"
-        return [player_y, player_x, player_direction]
-    elif key == "KEY_UP" and  0 != player_y - 1:
-        player_y -= 1
-        player_direction = "up"
-        return [player_y, player_x, player_direction]
-    elif key == "KEY_DOWN" and  window_y != player_y + 2:
-        player_y += 1
-        player_direction = "down"
-        return [player_y, player_x, player_direction]
+def player_walk(key):
+    global_var = globals()
+    if key == "KEY_LEFT" and  0 != global_var['PLAYER_X'] - 1:
+        global_var['PLAYER_X'] -= 1
+        global_var["PLAYER_DIRECTION"] = "left"
+        return [global_var['PLAYER_Y'], global_var["PLAYER_X"], global_var["PLAYER_DIRECTION"]]
+    elif key == "KEY_RIGHT" and  global_var["WIN_X"] != global_var["PLAYER_X"] + 2:
+        global_var["PLAYER_X"] += 1
+        global_var['PLAYER_DIRECTION'] = "right"
+        return [global_var['PLAYER_Y'], global_var['PLAYER_X'], global_var['PLAYER_DIRECTION']]
+    elif key == "KEY_UP" and  0 != global_var['PLAYER_Y'] - 1:
+        global_var['PLAYER_Y'] -= 1
+        global_var['PLAYER_DIRECTION'] = "up"
+        return [global_var['PLAYER_Y'], global_var['PLAYER_X'], global_var['PLAYER_DIRECTION']]
+    elif key == "KEY_DOWN" and  global_var['WIN_Y'] != global_var['PLAYER_Y'] + 2:
+        global_var['PLAYER_Y'] += 1
+        global_var['PLAYER_DIRECTION'] = "down"
+        return [global_var['PLAYER_Y'], global_var['PLAYER_X'], global_var['PLAYER_DIRECTION']]
     else:
-        return [player_y, player_x, player_direction]
+        return [global_var['PLAYER_Y'], global_var['PLAYER_X'], global_var['PLAYER_DIRECTION']]
 
 
 def player_attack(player_y, player_x, player_direction):
