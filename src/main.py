@@ -1,9 +1,9 @@
 import curses
 from curses import wrapper
 
-#TODO: fazer que troque de mapa no menu
 #TODO: adicionar novos inimigos
 #TODO: adicionar o boss
+#TODO: opções
 
 def main(stdsrc):
     WIN_Y = 35
@@ -29,20 +29,20 @@ def main(stdsrc):
     except:
         pass
 
-    splash_screen2(stdsrc)
+    splash_screen(stdsrc)
     curses.napms(2000)
     stdsrc.clear()
     stdsrc.refresh()
     stdsrc.clear()
     window = curses.newwin(WIN_Y, WIN_X)
     window.keypad(True)
-    menu(window)
+    choice = menu(window)
     window.nodelay(True)
 
     key = 0
     while True:
         curses.resize_term(35,135)
-        draw_map2(window)
+        get_menu_choice(choice, window)
         player_draw_sprite(window, PLAYER_DIRECTION, PLAYER_Y, PLAYER_X)
         
         
@@ -59,7 +59,7 @@ def main(stdsrc):
         
 
             window.erase()
-            window.insch(5,5,curses.ACS_DIAMOND)
+            #window.insch(5,5,curses.ACS_DIAMOND)
             player_origin = player_walk(WIN_X, WIN_Y, key, PLAYER_X, PLAYER_Y, PLAYER_DIRECTION)
             PLAYER_Y = player_origin[0]
             PLAYER_X = player_origin[1]
@@ -83,11 +83,24 @@ def main(stdsrc):
             game_over(window)
             break
         
-        print(ENEMY_HP, " ", PLAYER_HP)
+        #print(ENEMY_HP, " ", PLAYER_HP)
 
         window.refresh()
         window.border()
         stdsrc.refresh()
+
+### MISC ####
+def get_menu_choice(choice, win):
+    if choice == 0:
+        draw_map1(win)
+    elif choice == 1:
+        draw_map2(win)
+    elif choice == 2:
+        #return options(win)
+        quit()
+    else:
+        quit()
+#############
 
 ## PLAYER ###
 def player_draw_sprite(win, player_direction, player_y, player_x):
@@ -679,7 +692,7 @@ def sword(stdscr):
 
 #### MENU #####
 def print_menu(win, selected_opcoes_idx):
-    menu = ['opcao 1', 'opcao 2', 'opcao 3', 'exit']
+    menu = ['map 1', 'map 2', 'options', 'exit']    
 
     win.clear()
 
@@ -704,7 +717,7 @@ def print_menu(win, selected_opcoes_idx):
 
 
 def menu(win):
-    menu = ['opcao 1', 'opcao 2', 'opcao 3', 'exit']
+    menu = ['map 1', 'map 2', 'options', 'exit']
 
     opcaoAtual_opcoes_idx = 0
     
@@ -720,11 +733,12 @@ def menu(win):
         elif key == curses.KEY_DOWN and opcaoAtual_opcoes_idx < len(menu)-1:
             opcaoAtual_opcoes_idx += 1
         elif key == curses.KEY_ENTER or key in [10, 13]:
-            win.addstr(0, 0, "voce selecionou {}".format(menu[opcaoAtual_opcoes_idx]))
-            win.refresh()
-            win.getch()
-            if opcaoAtual_opcoes_idx == len(menu)-1:
-                break
+            #win.addstr(0, 0, "voce selecionou {}".format(menu[opcaoAtual_opcoes_idx]))
+            #win.refresh()
+            #win.getch()
+            #if opcaoAtual_opcoes_idx == len(menu)-1:
+            #    break
+            return opcaoAtual_opcoes_idx
 
         print_menu(win, opcaoAtual_opcoes_idx)
 
