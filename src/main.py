@@ -62,6 +62,7 @@ def main(stdsrc):
 
     PLAYER_Y, PLAYER_X = set_player_origin(choice)
 
+    number_of_enemies_killed = 0
     key = 0
     while True:
         curses.resize_term(35,135)
@@ -93,6 +94,9 @@ def main(stdsrc):
             player_draw_sprite(window)
             
             enemy_att_turn(ENEMIES, mapa)
+            
+            if key == "x":
+                player_attack_turn(ENEMIES, mapa)
             '''
             if ENEMY_HP > 0:
                 window.addstr(ENEMY_Y, ENEMY_X, "@")
@@ -110,8 +114,16 @@ def main(stdsrc):
                 player_use(window, PLAYER_Y, PLAYER_X, PLAYER_DIRECTION, PLAYER_INVENTORY)
                 stdsrc.addstr(0,0, str(PLAYER_INVENTORY))
 
+
+            for i in ENEMIES[mapa]:
+                if i['hp'] == 0:
+                    number_of_enemies_killed += 1
+
         if PLAYER_HP[0] <= 0:
             game_over(window)
+            break
+        if number_of_enemies_killed == len(ENEMIES[mapa]):
+            you_won(window)
             break
         
         window.refresh()
@@ -201,6 +213,11 @@ def set_player_origin(choice):
     else:
         return PLAYER_Y, PLAYER_X
 
+
+def player_attack_turn(enemy_list, mapa):
+    for enemy in enemy_list[mapa]:
+        if [enemy['origin'][0], enemy['origin'][1]] == player_attack(PLAYER_Y, PLAYER_X, PLAYER_DIRECTION):
+            enemy['hp'] -= PLAYER_DMG
 #old player collision
 '''
 def player_collides(win, y, x):
