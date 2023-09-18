@@ -1,9 +1,6 @@
 import curses
 from curses import wrapper
 
-#TODO: colisão do player
-#TODO: adicionar novos inimigos
-#TODO: adicionar o boss
 #TODO: opções
 
 def main(stdsrc):
@@ -19,23 +16,22 @@ def main(stdsrc):
     PLAYER_HP = [10, 10]
     PLAYER_INVENTORY = []
 
-    global ENEMY_DIRECTION, ENEMY_DMG, ENEMY_HP
+    global ENEMY_DMG, ENEMY_HP
     ENEMY_HP = 3
     ENEMY_DMG = 1
-    ENEMY_DIRECTION = "up"
 
-    ENEMY_1 = {'hp':ENEMY_HP, 'dmg': ENEMY_DMG, 'origin': [5, 7], 'direction': ENEMY_DIRECTION}
-    ENEMY_2 = {'hp':ENEMY_HP, 'dmg': ENEMY_DMG, 'origin': [20, 7], 'direction': ENEMY_DIRECTION}
-    ENEMY_3 = {'hp':ENEMY_HP, 'dmg': ENEMY_DMG, 'origin': [12, 28], 'direction': ENEMY_DIRECTION}
-    ENEMY_4 = {'hp':ENEMY_HP, 'dmg': ENEMY_DMG, 'origin': [12, 113], 'direction': ENEMY_DIRECTION}
-    ENEMY_5 = {'hp':ENEMY_HP, 'dmg': ENEMY_DMG, 'origin': [19, 78], 'direction': ENEMY_DIRECTION}
+    ENEMY_1 = {'hp':ENEMY_HP, 'dmg': ENEMY_DMG, 'origin': [5, 7]}
+    ENEMY_2 = {'hp':ENEMY_HP, 'dmg': ENEMY_DMG, 'origin': [21, 8]}
+    ENEMY_3 = {'hp':ENEMY_HP, 'dmg': ENEMY_DMG, 'origin': [14, 30]}
+    ENEMY_4 = {'hp':ENEMY_HP, 'dmg': ENEMY_DMG, 'origin': [16, 116]}
+    ENEMY_5 = {'hp':ENEMY_HP, 'dmg': ENEMY_DMG, 'origin': [23, 82]}
     ENEMIES_M1 = [ENEMY_1,ENEMY_2,ENEMY_3,ENEMY_4,ENEMY_5]
 
-    ENEMY_A = {'hp':ENEMY_HP, 'dmg': ENEMY_DMG, 'origin': [24, 50], 'direction': ENEMY_DIRECTION}
-    ENEMY_B = {'hp':ENEMY_HP, 'dmg': ENEMY_DMG, 'origin': [22, 20], 'direction': ENEMY_DIRECTION}
-    ENEMY_C = {'hp':ENEMY_HP, 'dmg': ENEMY_DMG, 'origin': [0, 78], 'direction': ENEMY_DIRECTION}
-    ENEMY_D = {'hp':ENEMY_HP, 'dmg': ENEMY_DMG, 'origin': [0, 8], 'direction': ENEMY_DIRECTION}
-    ENEMY_E = {'hp':ENEMY_HP, 'dmg': ENEMY_DMG, 'origin': [18, 111], 'direction': ENEMY_DIRECTION}
+    ENEMY_A = {'hp':ENEMY_HP, 'dmg': ENEMY_DMG, 'origin': [25, 51]}
+    ENEMY_B = {'hp':ENEMY_HP, 'dmg': ENEMY_DMG, 'origin': [23, 21]}
+    ENEMY_C = {'hp':ENEMY_HP, 'dmg': ENEMY_DMG, 'origin': [2, 80]}
+    ENEMY_D = {'hp':ENEMY_HP, 'dmg': ENEMY_DMG, 'origin': [3, 11]}
+    ENEMY_E = {'hp':ENEMY_HP, 'dmg': ENEMY_DMG, 'origin': [22, 115]}
     ENEMIES_M2 = [ENEMY_A,ENEMY_B,ENEMY_C,ENEMY_D,ENEMY_E]
     ENEMIES = [ENEMIES_M1, ENEMIES_M2]
 
@@ -68,10 +64,6 @@ def main(stdsrc):
         curses.resize_term(35,135)
         get_menu_choice(choice, window)
         player_draw_sprite(window)
-        #window.addch(".")
-        #window.refresh
-        #print(window.instr(4, 6, 0))
-        #curses.napms(1000)
         get_enemies(window, ENEMIES, mapa)
 
         try:
@@ -87,7 +79,7 @@ def main(stdsrc):
             
             
             window.erase()
-            player_origin = player_walk(key, window)
+            player_origin = player_walk(key)
             PLAYER_Y = player_origin[0]
             PLAYER_X = player_origin[1]
             PLAYER_DIRECTION = player_origin[2]
@@ -96,7 +88,9 @@ def main(stdsrc):
             enemy_att_turn(ENEMIES, mapa)
             
             if key == "x":
-                player_attack_turn(ENEMIES, mapa)
+                for enemy in ENEMIES[mapa]:
+                    if enemy['origin'] == player_attack(PLAYER_Y, PLAYER_X, PLAYER_DIRECTION):
+                        enemy['hp'] -= 1
             '''
             if ENEMY_HP > 0:
                 window.addstr(ENEMY_Y, ENEMY_X, "@")
@@ -112,20 +106,17 @@ def main(stdsrc):
                      
             if key == "z":
                 player_use(window, PLAYER_Y, PLAYER_X, PLAYER_DIRECTION, PLAYER_INVENTORY)
-                stdsrc.addstr(0,0, str(PLAYER_INVENTORY))
+                PLAYER_HP[0] += 3
 
-
-            for i in ENEMIES[mapa]:
-                if i['hp'] == 0:
-                    number_of_enemies_killed += 1
 
         if PLAYER_HP[0] <= 0:
             game_over(window)
             break
-        if number_of_enemies_killed == len(ENEMIES[mapa]):
+        if len(ENEMIES[mapa]) == 0:
             you_won(window)
             break
         
+        print(PLAYER_HP)
         window.refresh()
         window.border()
         stdsrc.refresh()
@@ -154,7 +145,7 @@ def player_draw_sprite(win):
     win.addstr(PLAYER_Y, PLAYER_X, curr_sprite)
 
 
-def player_walk(key, win):
+def player_walk(key):
     global_var = globals()
     if key == "KEY_LEFT" and  0 != global_var['PLAYER_X'] - 1:
         global_var['PLAYER_X'] -= 1
@@ -216,8 +207,8 @@ def set_player_origin(choice):
 
 def player_attack_turn(enemy_list, mapa):
     for enemy in enemy_list[mapa]:
-        if [enemy['origin'][0], enemy['origin'][1]] == player_attack(PLAYER_Y, PLAYER_X, PLAYER_DIRECTION):
-            enemy['hp'] -= PLAYER_DMG
+        if enemy['origin'] == player_attack(PLAYER_Y, PLAYER_X, PLAYER_DIRECTION):
+            enemy['hp'] -= 1
 #old player collision
 '''
 def player_collides(win, y, x):
@@ -248,21 +239,19 @@ def enemy_attack(enemy_y, enemy_x, player_y, player_x):
 def get_enemies(win, enemy_list, mapa):
     i = 0
     for enemy in enemy_list[mapa]:
-        i += 1
-        enemy_y = enemy['origin'][0] + i
-        enemy_x = enemy['origin'][1] + i
+        enemy_y = enemy['origin'][0]
+        enemy_x = enemy['origin'][1]
         if enemy['hp'] > 0:
             win.addstr(enemy_y, enemy_x, "@")
             win.refresh()
+        if enemy['hp'] <= 0:
+            del enemy_list[mapa][i]
+        i += 1
             
 
 def enemy_att_turn(enemy_list, mapa):
-    i = 0
     for enemy in enemy_list[mapa]:
-        i += 1
-        enemy_y = enemy['origin'][0] + i
-        enemy_x = enemy['origin'][1] + i
-        if enemy_attack(enemy_y, enemy_x, PLAYER_Y, PLAYER_X) == True:
+        if enemy_attack(enemy['origin'][0], enemy['origin'][1], PLAYER_Y, PLAYER_X) == True:
                 PLAYER_HP[0] -= enemy['dmg']
 ###############
 
