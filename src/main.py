@@ -1,4 +1,5 @@
 import curses
+import sys
 from curses import wrapper
 
 
@@ -69,11 +70,10 @@ def main(stdsrc):
     except:
         pass
 
-    splash_screen(stdsrc)
-    curses.napms(2000)
+    splash_screen2(stdsrc)
+    curses.napms(1000)
     stdsrc.clear()
     stdsrc.refresh()
-    stdsrc.clear()
     window = curses.newwin(WIN_Y, WIN_X)
     window.keypad(True)
     choice = menu(window)
@@ -130,7 +130,8 @@ def main(stdsrc):
             you_won(window)
             break
         
-        print(PLAYER_HP)
+        HPstr =  str("HP: " + str(PLAYER_HP[0]) + "/" + str(PLAYER_HP[1]))
+        window.addstr(WIN_Y - 2, 1, HPstr)
         window.refresh()
 
         window.border()
@@ -143,9 +144,7 @@ def get_menu_choice(choice, win):
     elif choice == 1:
         draw_map2(win)
     elif choice == 2:
-        #return options(win)
-        return 3
-    return 3
+        sys.exit()
 #############
 
 ## PLAYER ###
@@ -631,8 +630,8 @@ def splash_screen2(stdscr):
     curses.curs_set(0)
     stdscr.clear()
     
-    curses.init_pair(8, curses.COLOR_WHITE, curses.COLOR_WHITE)
-    WHITE = curses.color_pair(8)
+    curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_WHITE)
+    WHITE = curses.color_pair(1)
 
     # medindo o tamanho total do terminal
     alturaDaTela, comprimentoDaTela = stdscr.getmaxyx()
@@ -690,18 +689,18 @@ def sword(stdscr):
           0x1c * 1000 // 0xff,
           0x1c * 1000 // 0xff
        )
-    curses.init_pair(1,241,241)
-    COR1 = curses.color_pair(1)
-    curses.init_pair(2,240,240)
-    COR2 = curses.color_pair(2)
-    curses.init_pair(3,239,239)
-    COR3 = curses.color_pair(3)
-    curses.init_pair(4,238,238)
-    COR4 = curses.color_pair(4)
-    curses.init_pair(5, 237, 237)
-    COR5 = curses.color_pair(5)
-    curses.init_pair(6, 236,236)
-    COR6 = curses.color_pair(6)
+    curses.init_pair(10,241,241)
+    COR1 = curses.color_pair(10)
+    curses.init_pair(11,240,240)
+    COR2 = curses.color_pair(11)
+    curses.init_pair(12,239,239)
+    COR3 = curses.color_pair(12)
+    curses.init_pair(13,238,238)
+    COR4 = curses.color_pair(13)
+    curses.init_pair(14, 237, 237)
+    COR5 = curses.color_pair(14)
+    curses.init_pair(14, 236,236)
+    COR6 = curses.color_pair(14)
     
 
     alturaDaTela, comprimentoDaTela = stdscr.getmaxyx()
@@ -777,7 +776,7 @@ def sword(stdscr):
 
 #### MENU #####
 def print_menu(win, selected_opcoes_idx):
-    menu = ['map 1', 'map 2', 'options', 'exit']    
+    menu = ['difícil', 'fácil', 'exit']    
 
     win.clear()
 
@@ -802,7 +801,7 @@ def print_menu(win, selected_opcoes_idx):
 
 
 def menu(win):
-    menu = ['map 1', 'map 2', 'options', 'exit']
+    menu = ['difícil', 'fácil', 'exit']
 
     opcaoAtual_opcoes_idx = 0
     
