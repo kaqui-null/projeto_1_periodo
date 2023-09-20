@@ -407,11 +407,15 @@ def draw_room_map2(win):
 
 
         for i in range(y, y + altura):
+            win.attron(cores[1][1])
             win.addstr(i, x, '.' * comprimento) 
+            win.attroff(cores[1][1])
 
         
         window = win.subwin(altura+2, comprimento+2, y-1, x-1)
+        win.attron(cores[1][0])
         window.border()
+        win.attroff(cores[1][0])
 
 
 def draw_corr_map2(win):
