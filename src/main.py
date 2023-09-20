@@ -160,7 +160,6 @@ def player_attack(player_y, player_x, player_direction):
     return switcher.get(player_direction, "invalid direction")
 
 
-
 def set_player_origin(choice):
     if choice == 1:
         return 6, 10
@@ -172,17 +171,15 @@ def player_attack_turn(enemy_list, mapa):
     for enemy in enemy_list[mapa]:
         if enemy['origin'] == player_attack(PLAYER_Y, PLAYER_X, PLAYER_DIRECTION):
             enemy['hp'] -= 1
-#old player collision
-'''
+
+
 def player_collides(win, y, x):
-    #collides = ["@","─","┌", "┐", "└", "┘", "│", " ", ""]
-    sprite = win.inch(y,x) 
-    #ch = chr(sprite & 255)
-    if sprite != curses.ACS_VLINE:
+    collides = ['@','─',"┌", "┐", "└", "┘", "│", " ", ""]
+    sprite = chr(win.inch(y,x) & 0xFF)
+    if sprite in collides:
         return True
     else:
         return False
-''' 
 ##############
 
 #### ENEMY ####
@@ -783,6 +780,17 @@ def menu(win):
         win.refresh()
 ###############
 
+##COLETAVEIS##
+def coletaveis1(win, colet1):
+    
+    for i in range(len(colet1)):
+        win.addch(colet1[i][0], colet1[i][1], curses.ACS_DIAMOND)
+
+def coletaveis2(win, colet2):
+    
+    for i in range(len(colet2)):
+        win.addch(colet2[i][0], colet2[i][1], curses.ACS_DIAMOND)
+##############
 
 if __name__ == "__main__":
    wrapper(main)
