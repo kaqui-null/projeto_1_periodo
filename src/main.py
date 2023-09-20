@@ -1,8 +1,6 @@
 import curses
 from curses import wrapper
 
-#TODO: opções
-
 def main(stdsrc):
     global WIN_Y, WIN_X
     WIN_Y = 35
@@ -29,11 +27,12 @@ def main(stdsrc):
 
     ENEMY_A = {'hp':ENEMY_HP, 'dmg': ENEMY_DMG, 'origin': [25, 51]}
     ENEMY_B = {'hp':ENEMY_HP, 'dmg': ENEMY_DMG, 'origin': [23, 21]}
-    ENEMY_C = {'hp':ENEMY_HP, 'dmg': ENEMY_DMG, 'origin': [2, 80]}
-    ENEMY_D = {'hp':ENEMY_HP, 'dmg': ENEMY_DMG, 'origin': [3, 11]}
+    ENEMY_C = {'hp':ENEMY_HP, 'dmg': ENEMY_DMG, 'origin': [5, 80]}
+    ENEMY_D = {'hp':ENEMY_HP, 'dmg': ENEMY_DMG, 'origin': [6, 11]}
     ENEMY_E = {'hp':ENEMY_HP, 'dmg': ENEMY_DMG, 'origin': [22, 115]}
     ENEMIES_M2 = [ENEMY_A,ENEMY_B,ENEMY_C,ENEMY_D,ENEMY_E]
     ENEMIES = [ENEMIES_M1, ENEMIES_M2]
+
 
     stdsrc.nodelay(True)
 
@@ -58,14 +57,12 @@ def main(stdsrc):
 
     PLAYER_Y, PLAYER_X = set_player_origin(choice)
 
-    number_of_enemies_killed = 0
     key = 0
     while True:
         curses.resize_term(35,135)
         get_menu_choice(choice, window)
         player_draw_sprite(window)
         get_enemies(window, ENEMIES, mapa)
-
         try:
             key = stdsrc.getkey()
         except:
@@ -73,7 +70,9 @@ def main(stdsrc):
 
         if key != None:
             if key == "q":
-                print("you quit") # change to a centered message
+                stdsrc.clear()
+                stdsrc.addstr("you quit" )
+                stdsrc.refresh()
                 curses.napms(1000) 
                 break
             
@@ -91,22 +90,6 @@ def main(stdsrc):
                 for enemy in ENEMIES[mapa]:
                     if enemy['origin'] == player_attack(PLAYER_Y, PLAYER_X, PLAYER_DIRECTION):
                         enemy['hp'] -= 1
-            '''
-            if ENEMY_HP > 0:
-                window.addstr(ENEMY_Y, ENEMY_X, "@")
-                if enemy_attack(ENEMY_Y, ENEMY_X, PLAYER_Y, PLAYER_X) == True:
-                    PLAYER_HP[0] -= ENEMY_DMG
-            '''
-
-            '''
-            if key == "x":
-                if ([ENEMY_Y, ENEMY_X] == player_attack(PLAYER_Y, PLAYER_X, PLAYER_DIRECTION)):
-                    ENEMY_HP -= PLAYER_DMG
-            '''
-                     
-            if key == "z":
-                player_use(window, PLAYER_Y, PLAYER_X, PLAYER_DIRECTION, PLAYER_INVENTORY)
-                PLAYER_HP[0] += 3
 
 
         if PLAYER_HP[0] <= 0:
@@ -176,26 +159,6 @@ def player_attack(player_y, player_x, player_direction):
             }
     return switcher.get(player_direction, "invalid direction")
 
-
-def player_use(win, player_y, player_x, player_direction, player_inventory):
-    switcher_ver = {
-        "up": int(player_y - 1),
-        "down": int(player_y + 1)
-            }
-    switcher_hor = {
-        "left": int(player_x - 1),
-        "right": int(player_x + 1)
-    }
-    coord_y = switcher_ver.get(player_direction, - 1)
-    coord_x = switcher_hor.get(player_direction, - 1)
-
-    visualized_vertical = win.inch(coord_y, int(player_x))
-    visualized_horizontal = win.inch(int(player_y) ,coord_x)
-
-    if (visualized_horizontal == curses.ACS_DIAMOND) or (visualized_vertical == curses.ACS_DIAMOND):
-        player_inventory.append(win.inch(coord_y, int(player_x)))
-    else:
-        return False
 
 
 def set_player_origin(choice):
@@ -819,6 +782,7 @@ def menu(win):
 
         win.refresh()
 ###############
+
 
 if __name__ == "__main__":
    wrapper(main)
