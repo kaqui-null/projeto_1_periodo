@@ -87,7 +87,10 @@ def main(stdsrc):
 
     key = 0
     while True:
-        curses.resize_term(35,135)
+        try:
+            curses.resize_term(35,135)
+        except:
+            pass
         get_menu_choice(choice, window)
         player_draw_sprite(window)
         get_enemies(window, ENEMIES, mapa)
