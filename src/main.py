@@ -1,7 +1,35 @@
 import curses
 from curses import wrapper
 
+
+
 def main(stdsrc):
+    if curses.has_colors():
+        curses.use_default_colors()
+        if curses.can_change_color():
+            curses.init_color(
+                255,
+                0x1c * 1000 // 0xff,
+                0x1c * 1000 // 0xff,
+                0x1c * 1000 // 0xff
+            )
+
+    curses.init_pair(5, 254, 254)
+    WHITE = curses.color_pair(5)
+
+    curses.init_pair(6, 243, 243)
+    GREY = curses.color_pair(6)
+
+    curses.init_pair(7, 166, 166)
+    VIOLET = curses.color_pair(7)
+
+    curses.init_pair(8,40,40)
+    BLUE = curses.color_pair(8)
+
+    # [PAREDE, SALA]
+    global cores
+    cores = [[WHITE, GREY], [BLUE, VIOLET]]
+
     global WIN_Y, WIN_X
     WIN_Y = 35
     WIN_X = 135
@@ -41,7 +69,7 @@ def main(stdsrc):
     except:
         pass
 
-    splash_screen2(stdsrc)
+    splash_screen(stdsrc)
     curses.napms(2000)
     stdsrc.clear()
     stdsrc.refresh()
@@ -101,6 +129,7 @@ def main(stdsrc):
         
         print(PLAYER_HP)
         window.refresh()
+
         window.border()
         stdsrc.refresh()
 
@@ -218,7 +247,10 @@ def enemy_att_turn(enemy_list, mapa):
 #### MAPA1 ####
 def draw_map1(win):
     draw_room_map1(win)
+    win.attron(cores[0][0])
     draw_corr_map1(win)
+    win.attroff(cores[0][0])
+    win.refresh()
 
 
 def draw_room_map1(win):
@@ -252,10 +284,15 @@ def draw_room_map1(win):
 
     
         for i in range(y, y + altura):
+            win.attron(cores[0][1])
             win.addstr(i, x, '.' * comprimento) 
+            win.attroff(cores[0][1])
         
         window = win.subwin(altura+2, comprimento+2, y-1, x-1)
+        win.attron(cores[0][0])
         window.border()
+        win.attroff(cores[0][0])
+        win.refresh()
 
 
 def draw_corr_map1(win):
@@ -331,8 +368,14 @@ def draw_corr_map1(win):
 
 #### MAPA2 ####
 def draw_map2(win):
+    win.attron(cores[1][1])
     draw_room_map2(win)
+    win.attroff(cores[1][1])
+    win.refresh()
+    win.attron(cores[1][0])
     draw_corr_map2(win)
+    win.attroff(cores[1][0])
+    win.refresh()
 
 
 def draw_room_map2(win):
