@@ -41,7 +41,7 @@ def main(stdsrc):
     except:
         pass
 
-    splash_screen(stdsrc)
+    splash_screen2(stdsrc)
     curses.napms(2000)
     stdsrc.clear()
     stdsrc.refresh()
